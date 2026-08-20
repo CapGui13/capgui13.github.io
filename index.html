@@ -3,342 +3,292 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0a0b14">
 <title>capgui13 — projets</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --ink: #eef0fb;
-    --muted: #a6acc9;
-    --glass: rgba(255,255,255,0.06);
-    --glass-line: rgba(255,255,255,0.12);
-    --primary: #7c8cf0;
-    --teal: #2dd4bf;
-    --coral: #ff8a65;
-    --focus: #2dd4bf;
+    --bg:#0a0b14;
+    --ink:#f4f5fb;
+    --muted:#a6acc3;
+    --glass:rgba(255,255,255,.055);
+    --glass-hover:rgba(255,255,255,.085);
+    --line:rgba(255,255,255,.105);
+    --line-hover:rgba(255,255,255,.22);
+    --primary:#8390f7;
+    --teal:#33d6c0;
+    --coral:#ff936f;
+    --radius:20px;
   }
-  *{ box-sizing:border-box; }
-  html,body{ height:100%; }
+
+  *{box-sizing:border-box}
+  html{min-height:100%;background:var(--bg)}
   body{
     margin:0;
-    min-height:100%;
-    background: #0b0c16;
-    color: var(--ink);
-    font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
-    padding: 48px 20px;
+    min-height:100vh;
+    color:var(--ink);
+    font-family:'Inter',ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+    background:
+      radial-gradient(900px 620px at -8% -10%, rgba(93,111,242,.22), transparent 62%),
+      radial-gradient(780px 620px at 105% 96%, rgba(45,212,191,.16), transparent 60%),
+      radial-gradient(620px 520px at 86% 42%, rgba(255,138,101,.09), transparent 64%),
+      var(--bg);
+    padding:clamp(34px,6vw,72px) 20px 44px;
     line-height:1.5;
-    position:relative;
     overflow-x:hidden;
   }
 
-  /* --- animated gradient mesh background --- */
-  .blob{
+  body::before{
+    content:"";
     position:fixed;
-    border-radius:50%;
-    filter: blur(90px);
-    opacity:0.55;
-    z-index:0;
+    inset:0;
     pointer-events:none;
-  }
-  .blob.b1{
-    width:480px; height:480px;
-    background: radial-gradient(circle at 30% 30%, #4c5fd5, transparent 70%);
-    top:-160px; left:-140px;
-    animation: drift1 18s ease-in-out infinite;
-  }
-  .blob.b2{
-    width:420px; height:420px;
-    background: radial-gradient(circle at 30% 30%, #2dd4bf, transparent 70%);
-    bottom:-160px; right:-120px;
-    animation: drift2 22s ease-in-out infinite;
-  }
-  .blob.b3{
-    width:360px; height:360px;
-    background: radial-gradient(circle at 30% 30%, #ff8a65, transparent 70%);
-    top:40%; right:10%;
-    opacity:0.35;
-    animation: drift3 26s ease-in-out infinite;
-  }
-  @keyframes drift1{
-    0%,100%{ transform: translate(0,0) scale(1); }
-    50%{ transform: translate(60px, 40px) scale(1.1); }
-  }
-  @keyframes drift2{
-    0%,100%{ transform: translate(0,0) scale(1); }
-    50%{ transform: translate(-50px, -30px) scale(1.08); }
-  }
-  @keyframes drift3{
-    0%,100%{ transform: translate(0,0) scale(1); }
-    50%{ transform: translate(-40px, 50px) scale(0.95); }
+    opacity:.22;
+    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.05'/%3E%3C/svg%3E");
+    mix-blend-mode:soft-light;
   }
 
   .wrap{
-    max-width: 620px;
-    margin: 0 auto;
+    width:min(100%,680px);
+    margin:0 auto;
     position:relative;
     z-index:1;
   }
 
-  /* --- header --- */
-  header{
-    display:flex;
-    align-items:center;
-    gap:16px;
-    margin-bottom: 36px;
-    opacity:0;
-    animation: rise 0.6s ease forwards;
-  }
-  @keyframes rise{ from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);} }
-
-  .avatar{
-    width:56px; height:56px; border-radius:16px;
-    background: linear-gradient(135deg, var(--primary), var(--teal));
-    color:#0b0c16;
-    display:flex; align-items:center; justify-content:center;
-    font-family:'Space Grotesk', sans-serif;
-    font-weight:700; font-size:18px;
-    flex:0 0 auto;
-    box-shadow: 0 12px 30px -8px rgba(124,140,240,0.55);
-  }
-  h1{
-    font-family:'Space Grotesk', sans-serif;
-    font-size: 26px;
-    margin: 0 0 4px;
-    font-weight:700;
-    letter-spacing:-0.01em;
-    background: linear-gradient(120deg, #fff, var(--primary) 60%, var(--teal));
-    -webkit-background-clip:text;
-    background-clip:text;
-    color:transparent;
-  }
-  header p{
-    margin:0; color:var(--muted); font-size:14.5px;
-  }
-
   .section-label{
+    margin:0 0 14px 4px;
+    color:var(--muted);
     font-size:12.5px;
     font-weight:600;
+    letter-spacing:.08em;
     text-transform:uppercase;
-    letter-spacing:0.08em;
-    color:var(--muted);
-    margin: 0 0 14px 4px;
-    opacity:0;
-    animation: rise 0.6s ease forwards;
-    animation-delay: 0.1s;
+    animation:rise .55s cubic-bezier(.2,.8,.2,1) both;
   }
 
-  /* --- glass list --- */
   .list{
-    display:flex;
-    flex-direction:column;
+    display:grid;
     gap:12px;
-    margin-bottom: 40px;
   }
 
-  .row{
-    --accent: var(--primary);
-    position:relative;
-    background: var(--glass);
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
-    border:1px solid var(--glass-line);
-    border-radius:18px;
-    padding:16px 18px;
-    display:flex;
+  .project{
+    --accent:var(--primary);
+    display:grid;
+    grid-template-columns:auto minmax(0,1fr) auto;
     align-items:center;
-    gap:14px;
+    gap:15px;
+    min-height:82px;
+    padding:14px 15px;
+    color:inherit;
+    text-decoration:none;
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    background:linear-gradient(145deg,rgba(255,255,255,.07),rgba(255,255,255,.035));
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,.055),
+      0 18px 44px -32px rgba(0,0,0,.95);
+    backdrop-filter:blur(18px) saturate(120%);
+    -webkit-backdrop-filter:blur(18px) saturate(120%);
+    position:relative;
+    overflow:hidden;
     isolation:isolate;
-    box-shadow: 0 1px 1px rgba(255,255,255,0.04) inset, 0 20px 40px -28px rgba(0,0,0,0.6);
-    transition: transform 0.2s cubic-bezier(.2,.8,.2,1), box-shadow 0.2s ease, border-color 0.2s ease, background 0.2s ease;
     opacity:0;
-    animation: rise 0.5s ease forwards;
+    transform:translateY(9px);
+    animation:rise .48s cubic-bezier(.2,.8,.2,1) forwards;
+    transition:transform .2s cubic-bezier(.2,.8,.2,1),border-color .2s ease,background .2s ease,box-shadow .2s ease;
   }
-  .row:hover{
-    transform: translateY(-3px);
-    background: rgba(255,255,255,0.09);
-    border-color: rgba(255,255,255,0.3);
-    box-shadow: 0 24px 48px -24px var(--accent), 0 0 24px -8px var(--accent);
+
+  .project::before{
+    content:"";
+    position:absolute;
+    inset:0 auto 0 0;
+    width:3px;
+    background:linear-gradient(to bottom,transparent,var(--accent),transparent);
+    opacity:.78;
   }
-  .row:focus-within{
-    outline: 2px solid var(--focus);
-    outline-offset: 2px;
+
+  .project::after{
+    content:"";
+    position:absolute;
+    width:160px;height:160px;border-radius:50%;
+    right:-95px;top:-90px;
+    background:var(--accent);
+    filter:blur(44px);
+    opacity:.09;
+    z-index:-1;
+    transition:opacity .2s ease,transform .2s ease;
   }
+
+  .project:hover{
+    transform:translateY(-3px);
+    border-color:var(--line-hover);
+    background:linear-gradient(145deg,rgba(255,255,255,.095),rgba(255,255,255,.052));
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,.08),
+      0 24px 54px -34px var(--accent);
+  }
+
+  .project:hover::after{opacity:.17;transform:scale(1.08)}
+  .project:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 
   .badge{
-    flex:0 0 auto;
-    padding:10px 16px;
-    border-radius:10px;
-    display:flex; align-items:center; justify-content:center;
-    font-family:'Space Grotesk', sans-serif;
-    font-weight:700; font-size:14px;
-    letter-spacing:0.01em;
-    white-space:nowrap;
-    color:#0b0c16;
-    box-shadow: 0 8px 18px -6px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.15) inset;
-    transition: box-shadow 0.2s ease;
-  }
-  .row:hover .badge{
-    box-shadow: 0 8px 18px -6px rgba(0,0,0,0.4), 0 0 20px -2px var(--accent), 0 0 0 1px rgba(255,255,255,0.25) inset;
-  }
-
-  .row-text{
-    flex:1 1 auto;
-    min-width:0;
+    min-width:64px;
+    height:48px;
+    padding:0 14px;
+    border-radius:14px;
     display:flex;
     align-items:center;
-  }
-  .row-desc{
+    justify-content:center;
+    font-family:'Space Grotesk',sans-serif;
     font-size:13.5px;
-    color: var(--muted);
+    line-height:1;
+    letter-spacing:.01em;
+    font-weight:700;
+    color:#0a0b14;
+    background:linear-gradient(135deg,var(--badge-a),var(--badge-b));
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,.28),
+      0 10px 24px -15px var(--accent);
+  }
+
+  .copy{min-width:0}
+
+  .desc{
     margin:0;
+    min-height:19px;
+    color:var(--muted);
+    font-size:13.5px;
     white-space:nowrap;
     overflow:hidden;
     text-overflow:ellipsis;
   }
-  .skeleton{
-    display:inline-block; width:70%; height:11px; border-radius:4px;
-    background: linear-gradient(90deg, rgba(255,255,255,0.06) 25%, rgba(255,255,255,0.14) 37%, rgba(255,255,255,0.06) 63%);
-    background-size: 400% 100%;
-    animation: shimmer 1.4s ease infinite;
+
+  .desc.loading{
+    width:min(78%,360px);
+    height:10px;
+    min-height:10px;
+    border-radius:999px;
+    background:linear-gradient(90deg,rgba(255,255,255,.055) 25%,rgba(255,255,255,.14) 38%,rgba(255,255,255,.055) 63%);
+    background-size:360% 100%;
+    animation:shimmer 1.35s ease infinite;
   }
-  @keyframes shimmer{ 0%{background-position:100% 0;} 100%{background-position:0 0;} }
 
   .launch{
-    flex:0 0 auto;
-    width:38px; height:38px;
-    clip-path: polygon(25% 6%, 75% 6%, 100% 50%, 75% 94%, 25% 94%, 0% 50%);
-    background: rgba(255,255,255,0.07);
-    display:flex; align-items:center; justify-content:center;
-    color: var(--muted);
-    transition: background 0.25s ease, color 0.25s ease, filter 0.25s ease, transform 0.25s ease;
-  }
-  .launch svg{ transition: transform 0.25s ease; }
-  .row:hover .launch{
-    background: linear-gradient(135deg, var(--accent), rgba(255,255,255,0.25));
-    color: #0b0c16;
-    filter: drop-shadow(0 0 10px var(--accent));
-    transform: scale(1.06);
-  }
-  .row:hover .launch svg{
-    transform: translate(1px,-1px);
+    width:40px;height:40px;
+    display:grid;
+    place-items:center;
+    border-radius:13px;
+    color:#c2c7da;
+    background:rgba(255,255,255,.045);
+    border:1px solid rgba(255,255,255,.055);
+    transition:transform .2s ease,color .2s ease,background .2s ease,border-color .2s ease;
   }
 
-  a.row-hitbox{
-    position:absolute; inset:0; border-radius:18px;
+  .launch svg{transition:transform .2s ease}
+  .project:hover .launch{
+    color:#0a0b14;
+    background:var(--accent);
+    border-color:transparent;
+    transform:scale(1.04);
+  }
+  .project:hover .launch svg{transform:translate(1px,-1px)}
+
+  @keyframes rise{to{opacity:1;transform:translateY(0)}}
+  @keyframes shimmer{0%{background-position:100% 0}100%{background-position:0 0}}
+
+  @media (max-width:520px){
+    body{padding-left:14px;padding-right:14px}
+    .project{min-height:76px;padding:12px;gap:12px;border-radius:17px}
+    .badge{min-width:58px;height:44px;padding:0 11px;border-radius:12px;font-size:12.5px}
+    .launch{width:36px;height:36px;border-radius:11px}
+    .desc{font-size:12.5px}
   }
 
-  /* --- footer --- */
-  footer{
-    text-align:center;
-    padding-top: 4px;
-    opacity:0;
-    animation: rise 0.6s ease forwards;
-    animation-delay: 0.7s;
-  }
-  footer a{
-    display:inline-flex; align-items:center; gap:8px;
-    color: var(--ink);
-    text-decoration:none;
-    font-size:14px;
-    font-weight:600;
-    background: var(--glass);
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
-    border:1px solid var(--glass-line);
-    padding:11px 20px;
-    border-radius:999px;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
-  }
-  footer a:hover, footer a:focus-visible{
-    border-color: rgba(124,140,240,0.5);
-    box-shadow: 0 10px 26px -10px rgba(124,140,240,0.5);
-    transform: translateY(-1px);
-    outline:none;
-  }
-
-  @media (prefers-reduced-motion: reduce){
-    *{ animation-duration: 0.01ms !important; transition:none !important; }
-    .blob{ animation:none !important; }
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition:none!important;scroll-behavior:auto!important}
   }
 </style>
 </head>
 <body>
-
-  <div class="blob b1"></div>
-  <div class="blob b2"></div>
-  <div class="blob b3"></div>
-
-  <div class="wrap">
-
+  <main class="wrap">
     <p class="section-label">Projets en ligne</p>
 
-    <div class="list" id="repo-list">
-      <div class="row" data-repo="RR" style="--accent:#7c8cf0; animation-delay:0.15s;">
-        <div class="badge" style="background:linear-gradient(135deg,#7c8cf0,#4c5fd5)">RR</div>
-        <div class="row-text">
-          <p class="row-desc"><span class="skeleton"></span></p>
-        </div>
-        <span class="launch"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8"/></svg></span>
-        <a class="row-hitbox" href="https://capgui13.github.io/RR/" target="_blank" rel="noopener" aria-label="Ouvrir le projet RR"></a>
-      </div>
+    <section class="list" aria-label="Liste des projets">
+      <a class="project" data-repo="RR" data-description="Website du Roy René" href="https://capgui13.github.io/RR/" target="_blank" rel="noopener" style="--accent:#8390f7;--badge-a:#99a4ff;--badge-b:#5c6fe5;animation-delay:.08s" aria-label="Ouvrir le projet RR dans un nouvel onglet">
+        <span class="badge">RR</span>
+        <span class="copy"><span class="desc">Website du Roy René</span></span>
+        <span class="launch" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg></span>
+      </a>
 
-      <div class="row" data-repo="QPJB" style="--accent:#ff8a65; animation-delay:0.22s;">
-        <div class="badge" style="background:linear-gradient(135deg,#ffab8a,#ff8a65)">QPJB</div>
-        <div class="row-text">
-          <p class="row-desc"><span class="skeleton"></span></p>
-        </div>
-        <span class="launch"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8"/></svg></span>
-        <a class="row-hitbox" href="https://capgui13.github.io/QPJB/" target="_blank" rel="noopener" aria-label="Ouvrir le projet QPJB"></a>
-      </div>
+      <a class="project" data-repo="QPJB13" data-description="Website du QPJB" href="https://capgui13.github.io/QPJB13/" target="_blank" rel="noopener" style="--accent:#33d6c0;--badge-a:#66ead8;--badge-b:#27bda9;animation-delay:.14s" aria-label="Ouvrir le projet QPJB13 dans un nouvel onglet">
+        <span class="badge">QPJB13</span>
+        <span class="copy"><span class="desc">Website du QPJB</span></span>
+        <span class="launch" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg></span>
+      </a>
 
-      <div class="row" data-repo="QPJB13" style="--accent:#2dd4bf; animation-delay:0.29s;">
-        <div class="badge" style="background:linear-gradient(135deg,#5eead4,#2dd4bf)">QPJB13</div>
-        <div class="row-text">
-          <p class="row-desc"><span class="skeleton"></span></p>
-        </div>
-        <span class="launch"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8"/></svg></span>
-        <a class="row-hitbox" href="https://capgui13.github.io/QPJB13/" target="_blank" rel="noopener" aria-label="Ouvrir le projet QPJB13"></a>
-      </div>
+      <a class="project" data-repo="QPJB" data-description="App du QPJB" href="https://capgui13.github.io/QPJB/" target="_blank" rel="noopener" style="--accent:#ff936f;--badge-a:#ffb293;--badge-b:#f47d58;animation-delay:.20s" aria-label="Ouvrir le projet QPJB dans un nouvel onglet">
+        <span class="badge">QPJB</span>
+        <span class="copy"><span class="desc">App du QPJB</span></span>
+        <span class="launch" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg></span>
+      </a>
 
-      <div class="row" data-repo="gen" style="--accent:#d5744c; animation-delay:0.36s;">
-        <div class="badge" style="background:linear-gradient(135deg,#f0b48c,#d5744c)">gen</div>
-        <div class="row-text">
-          <p class="row-desc"><span class="skeleton"></span></p>
-        </div>
-        <span class="launch"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8"/></svg></span>
-        <a class="row-hitbox" href="https://capgui13.github.io/gen/" target="_blank" rel="noopener" aria-label="Ouvrir le projet gen"></a>
-      </div>
+      <a class="project" data-repo="gen" href="https://capgui13.github.io/gen/" target="_blank" rel="noopener" style="--accent:#d9835c;--badge-a:#efb18f;--badge-b:#ca6f47;animation-delay:.26s" aria-label="Ouvrir le projet gen dans un nouvel onglet">
+        <span class="badge">gen</span>
+        <span class="copy"><span class="desc loading" aria-live="polite"></span></span>
+        <span class="launch" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg></span>
+      </a>
 
-      <div class="row" data-repo="play" style="--accent:#9d5cd5; animation-delay:0.43s;">
-        <div class="badge" style="background:linear-gradient(135deg,#c79bf5,#9d5cd5)">play</div>
-        <div class="row-text">
-          <p class="row-desc"><span class="skeleton"></span></p>
-        </div>
-        <span class="launch"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8"/></svg></span>
-        <a class="row-hitbox" href="https://capgui13.github.io/play/" target="_blank" rel="noopener" aria-label="Ouvrir le projet play"></a>
-      </div>
-    </div>
-
-  </div>
+      <a class="project" data-repo="play" data-description="Rings" href="https://capgui13.github.io/play/" target="_blank" rel="noopener" style="--accent:#a86ae0;--badge-a:#cf9df6;--badge-b:#9851d2;animation-delay:.32s" aria-label="Ouvrir le projet play dans un nouvel onglet">
+        <span class="badge">play</span>
+        <span class="copy"><span class="desc">Rings</span></span>
+        <span class="launch" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg></span>
+      </a>
+    </section>
+  </main>
 
 <script>
-// Récupère la description publique de chaque repo via l'API GitHub
-// (best effort : si l'API est indisponible ou en rate-limit, on affiche
-// un texte de repli plutôt que de laisser un vide)
-document.querySelectorAll('.row[data-repo]').forEach(async row => {
-  const repo = row.getAttribute('data-repo');
-  const desc = row.querySelector('.row-desc');
-  try{
-    const res = await fetch(`https://api.github.com/repos/capgui13/${repo}`);
-    if(!res.ok) throw new Error('no data');
-    const data = await res.json();
-    desc.textContent = data.description ? data.description : '';
-  }catch(e){
-    desc.textContent = '';
-  }
-});
-</script>
+(() => {
+  const card = document.querySelector('.project[data-repo="gen"]');
+  if (!card) return;
 
+  const desc = card.querySelector('.desc');
+  const CACHE_KEY = 'capgui13-gen-description-v3';
+  const CACHE_TTL = 6 * 60 * 60 * 1000;
+
+  const show = text => {
+    desc.classList.remove('loading');
+    desc.textContent = text || '';
+  };
+
+  let cached = null;
+  try { cached = JSON.parse(localStorage.getItem(CACHE_KEY) || 'null'); } catch (_) {}
+
+  if (cached && Date.now() - cached.time < CACHE_TTL) {
+    show(cached.description);
+    return;
+  }
+
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 3500);
+
+  fetch('https://api.github.com/repos/capgui13/gen', {
+    headers: { 'Accept': 'application/vnd.github+json' },
+    signal: controller.signal
+  })
+    .then(res => {
+      if (!res.ok) throw new Error(`GitHub API: ${res.status}`);
+      return res.json();
+    })
+    .then(data => {
+      const description = (data.description || '').trim();
+      try { localStorage.setItem(CACHE_KEY, JSON.stringify({ description, time: Date.now() })); } catch (_) {}
+      show(description);
+    })
+    .catch(() => show(cached ? cached.description : ''))
+    .finally(() => clearTimeout(timer));
+})();
+</script>
 </body>
 </html>
