@@ -121,16 +121,26 @@
     transition:opacity .2s ease,transform .2s ease;
   }
 
-  .project:hover{
-    transform:translateY(-3px);
-    border-color:var(--line-hover);
-    background:linear-gradient(145deg,rgba(255,255,255,.095),rgba(255,255,255,.052));
-    box-shadow:
-      inset 0 1px 0 rgba(255,255,255,.08),
-      0 24px 54px -34px var(--accent);
+  @media (hover:hover) and (pointer:fine){
+    .project:hover{
+      transform:translateY(-3px);
+      border-color:var(--line-hover);
+      background:linear-gradient(145deg,rgba(255,255,255,.095),rgba(255,255,255,.052));
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.08),
+        0 24px 54px -34px var(--accent);
+    }
+
+    .project:hover::after{opacity:.17;transform:scale(1.08)}
+    .project:hover .launch{
+      color:#0a0b14;
+      background:var(--accent);
+      border-color:transparent;
+      transform:scale(1.04);
+    }
+    .project:hover .launch svg{transform:translate(1px,-1px)}
   }
 
-  .project:hover::after{opacity:.17;transform:scale(1.08)}
   .project:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 
   .badge{
@@ -187,13 +197,6 @@
   }
 
   .launch svg{transition:transform .2s ease}
-  .project:hover .launch{
-    color:#0a0b14;
-    background:var(--accent);
-    border-color:transparent;
-    transform:scale(1.04);
-  }
-  .project:hover .launch svg{transform:translate(1px,-1px)}
 
   @keyframes rise{to{opacity:1;transform:translateY(0)}}
   @keyframes shimmer{0%{background-position:100% 0}100%{background-position:0 0}}
