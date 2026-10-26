@@ -28,7 +28,7 @@ jobs:
             curl --fail --location --retry 3 --silent --show-error "https://dds-bridge.github.io/dds/$f" -o "BridgeDD/$f"
             test -s "BridgeDD/$f"
           done
-          cp BridgeDD-source/coach.js BridgeDD-source/coach.css BridgeDD-source/coach_rules.js BridgeDD-source/coach_keyboard.js BridgeDD-source/manifest.webmanifest BridgeDD-source/icon.svg BridgeDD/
+          cp BridgeDD-source/coach.js BridgeDD-source/coach.css BridgeDD-source/coach_rules.js BridgeDD-source/manifest.webmanifest BridgeDD-source/icon.svg BridgeDD/
           cp /tmp/bridge-dds/LICENSE BridgeDD/DDS_LICENSE.txt
           python3 - <<'PY'
           from pathlib import Path
@@ -38,15 +38,15 @@ jobs:
           assert '</head>' in html and '</body>' in html
           html=html.replace('<html lang="en">','<html lang="fr">')
           html=html.replace('<title>DDS Web — Double Dummy Solver</title>', '<title>Bridge DD · Jeu interactif</title>')
-          html=html.replace('</head>','<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n<meta name="theme-color" content="#304a94">\n<link rel="manifest" href="manifest.webmanifest">\n<link rel="stylesheet" href="coach.css?v=keyboard-v3">\n</head>')
-          html=html.replace('</body>','<script src="coach_rules.js"></script>\n<script src="coach.js"></script>\n<script src="coach_keyboard.js?v=keyboard-v4"></script>\n</body>')
+          html=html.replace('</head>','<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n<meta name="theme-color" content="#304a94">\n<link rel="manifest" href="manifest.webmanifest">\n<link rel="stylesheet" href="coach.css?v=compact-v5">\n</head>')
+          html=html.replace('</body>','<script src="coach_rules.js"></script>\n<script src="coach.js"></script>\n\n</body>')
           Path("BridgeDD/index.html").write_text(html)
           PY
           node --check BridgeDD/coach.js
-          node --check BridgeDD/coach_keyboard.js
+          rm -f BridgeDD/coach_keyboard.js
           node --check BridgeDD/coach_rules.js
           node --check BridgeDD/dds_web_play.js
-          grep -q "coach_keyboard.js" BridgeDD/index.html
+          ! grep -q "coach_keyboard.js" BridgeDD/index.html
           test -s BridgeDD/index.html
           test -s BridgeDD/dds_web_wasm_bin.js
           node - <<'JS'
@@ -63,7 +63,7 @@ jobs:
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add BridgeDD/
+          git add -A BridgeDD/
           if git diff --cached --quiet; then
             echo "Déjà à jour."
           else
