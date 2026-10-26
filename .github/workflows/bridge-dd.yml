@@ -47,6 +47,14 @@ jobs:
           node --check BridgeDD/dds_web_play.js
           test -s BridgeDD/index.html
           test -s BridgeDD/dds_web_wasm_bin.js
+          node - <<'JS'
+          const fs = require('node:fs');
+          const vm = require('node:vm');
+          vm.runInThisContext(fs.readFileSync('BridgeDD/dds_web_wasm_bin.js', 'utf8'));
+          const bin = globalThis.ddsWebWasmBytes();
+          fs.writeFileSync('/tmp/bridge-dd.wasm', Buffer.from(bin));
+          JS
+          node /tmp/bridge-dds/web/tests/dds_web_wasm_node.mjs "$PWD/BridgeDD/dds_web_wasm.js" /tmp/bridge-dd.wasm
       - name: Publier uniquement le dossier BridgeDD
         shell: bash
         run: |
