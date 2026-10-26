@@ -27,21 +27,181 @@ body>button,body>#sample-deals{margin:5px 3px!important;min-height:40px;height:a
 .hand-card{touch-action:manipulation;cursor:pointer}
 .hand-card-playable{outline:1px solid #456fb9;outline-offset:0}
 .coach-training .hand-card-tricks,.coach-training #result-table{display:none!important}
-@media(max-width:650px){
- #coach-toolbar{padding:11px 8px}
- .coach-title strong{font-size:20px}
- #coach-toolbar select{font-size:13px;padding:7px 5px}
- .coach-fields label{flex:0 1 auto}
- .grid-outer{width:calc(100% - 8px);padding:3px!important}
- .grid-container{display:grid!important;grid-template-areas:"north north north" "west center east" "south south south" "se se se"!important;grid-template-columns:35% 30% 35%!important;gap:1px;width:100%}
- .hand-north,.hand-south{justify-self:center;min-width:0;max-width:100%}
- .hand-east,.hand-west{min-width:0;overflow:visible}
- .hand-suit{font-size:clamp(10px,2.8vw,14px)!important}
- .hand-card{font-size:clamp(10px,3.2vw,14px)!important;min-width:0!important;padding:1px!important}
- .hand-holding{max-width:100%;flex-wrap:wrap!important}
- .grid-filler-center{min-height:70px!important;font-size:18px!important;overflow:hidden}
- .grid-filler-nw,.grid-filler-ne,.grid-filler-sw{display:none!important}
- .grid-filler-se{grid-area:se;justify-self:stretch;min-width:0;overflow-x:auto}
- #result-table{width:100%;font-size:14px}
- .trick-status{font-size:14px!important}
+/* Optimisation tactile iPhone : on ne rapetisse jamais les cartes pour les faire tenir.
+   Les longues couleurs passent à la ligne, sans troncature ni débordement. */
+@media (max-width: 650px) {
+  #coach-toolbar {padding: 11px 9px}
+  .coach-title strong {font-size: 20px}
+  #coach-toolbar select {font-size: 14px; padding: 7px 5px}
+  .coach-fields label {flex: 0 1 auto}
+
+  .grid-outer {
+    width: calc(100% - 8px);
+    padding: 3px !important;
+    overflow: visible;
+  }
+  .grid-container {
+    display: grid !important;
+    grid-template-areas:
+      "north north north"
+      "west center east"
+      "south south south"
+      "se se se" !important;
+    /* Redonne de la place aux mains Est/Ouest. */
+    grid-template-columns: minmax(0, 40%) minmax(0, 20%) minmax(0, 40%) !important;
+    gap: 2px;
+    width: 100%;
+  }
+
+  .grid-item.hand-north,
+  .grid-item.hand-south {
+    justify-self: center;
+    width: min(92%, 350px);
+    min-width: 0;
+    max-width: 100%;
+    padding: 10px 4px !important;
+  }
+  .grid-item.hand-west,
+  .grid-item.hand-east {
+    align-self: stretch;
+    min-width: 0;
+    max-width: 100%;
+    overflow: visible !important;
+    padding: 12px 3px !important;
+  }
+
+  /* Le solveur tente de réduire la police des mains Est/Sud. En mode
+     tactile on maintient une taille fixe : c'est la ligne qui s'adapte. */
+  .grid-item.hand-north .hand-suit,
+  .grid-item.hand-south .hand-suit,
+  .grid-item.hand-east .hand-suit,
+  .grid-item.hand-west .hand-suit {
+    display: flex !important;
+    align-items: flex-start !important;
+    gap: 2px !important;
+    white-space: normal !important;
+    font-size: 17px !important;
+    line-height: 1.15 !important;
+    width: 100%;
+    min-width: 0;
+    margin: 0 0 9px;
+  }
+  .hand-suit > :is(spade-suit, heart-suit, diamond-suit, club-suit) {
+    flex: 0 0 17px;
+    width: 17px;
+    text-align: center;
+    padding-top: 11px;
+  }
+  .hand-holding {
+    display: flex !important;
+    flex: 1 1 auto;
+    min-width: 0;
+    max-width: 100%;
+    flex-wrap: wrap !important;
+    align-items: flex-start;
+    align-content: flex-start;
+    column-gap: 5px !important;
+    row-gap: 5px !important;
+  }
+
+  .hand-card {
+    box-sizing: border-box !important;
+    flex: 0 0 auto;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    font: 600 16px/1 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+    letter-spacing: 0 !important;
+    width: 36px !important;
+    min-width: 36px !important;
+    height: 42px !important;
+    min-height: 42px !important;
+    margin: 0 !important;
+    padding: 0 2px !important;
+    border: 1px solid #9baac0 !important;
+    border-radius: 6px !important;
+    color: #21314e;
+    background: white !important;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: rgba(50, 91, 179, .19);
+  }
+  .hand-card.hand-card-playable {
+    background: #ecf5ff !important;
+    border-color: #5280bf !important;
+    box-shadow: inset 0 0 0 1px rgba(82,128,191,.18);
+  }
+  .hand-card:disabled {
+    opacity: .60;
+    box-shadow: none !important;
+  }
+  .hand-card:focus-visible {
+    outline: 2px solid #1b5cbe !important;
+    outline-offset: 1px !important;
+  }
+  .hand-card-tricks {
+    font-size: 9px !important;
+    right: 2px;
+    bottom: 1px;
+  }
+  /* L'emplacement de saisie disparaît seulement pendant le jeu. */
+  body.playing .hand-suit-input {
+    display: none !important;
+  }
+  body:not(.playing) .hand-suit-input {
+    flex: 0 0 9px;
+    min-width: 9px;
+    width: 9px;
+  }
+
+  .grid-item.grid-filler-center {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-width: 0;
+    padding: 0 !important;
+    overflow: visible !important;
+    min-height: 78px !important;
+  }
+  .trick-status {
+    font-size: 13px !important;
+    line-height: 1.1 !important;
+    gap: 3px !important;
+    grid-template-columns: repeat(3, minmax(14px, auto)) !important;
+  }
+  .trick-status .trick-card {
+    min-width: 18px !important;
+    padding: 3px 2px !important;
+  }
+  .grid-filler-nw,
+  .grid-filler-ne,
+  .grid-filler-sw {
+    display: none !important;
+  }
+  /* Le tableau DD est utile pour choisir le contrat, pas pendant le jeu. */
+  body.playing .grid-filler-se,
+  body.playing .result-table-hint {
+    display: none !important;
+  }
+  .grid-filler-se {
+    grid-area: se;
+    justify-self: stretch;
+    min-width: 0;
+    overflow-x: auto;
+    padding: 6px !important;
+  }
+  #result-table {width: 100%; font-size: 14px}
+  .hand-card-count {font-size: 11px; padding-left: 18px}
+  #play-hint {font-size: 12px; margin: 4px 6px}
+  .coach-verdict {font-size: 14px}
+}
+@media (max-width: 359px) {
+  .hand-card {
+    width: 33px !important;
+    min-width: 33px !important;
+    height: 40px !important;
+    min-height: 40px !important;
+    font-size: 15px !important;
+  }
+  .hand-holding {column-gap: 4px !important}
 }
