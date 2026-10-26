@@ -20,7 +20,9 @@ function render(){
  if(!host)return;
  host.hidden=playing();
  host.classList.toggle("bridge-kb-closed",!state.open);
- document.body.classList.toggle("bridge-keyboard-open",!playing()&&state.open);
+ const shouldOpen=!playing()&&state.open;
+ if(document.body.classList.contains("bridge-keyboard-open")!==shouldOpen)
+  document.body.classList.toggle("bridge-keyboard-open",shouldOpen);
  byId("bridge-kb-toggle").textContent=state.open?"Réduire":"Ouvrir le clavier";
  byId("bridge-kb-toggle").setAttribute("aria-expanded",String(state.open));
  byId("bridge-kb-status").textContent=nameSeat(state.seat)+" · "+handCount(state.seat)+"/13 cartes";
