@@ -1,0 +1,62 @@
+name: Construire Bridge DD
+on:
+  push:
+    branches: [main]
+    paths:
+      - "BridgeDD-source/**"
+      - ".github/workflows/bridge-dd.yml"
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Télécharger DDS Web et construire Bridge DD
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone --quiet --depth=1 --branch develop https://github.com/dds-bridge/dds.git /tmp/bridge-dds
+          mkdir -p BridgeDD
+          for f in dds_web.html dds_web.css dds_web.js dds_web_core.js dds_web_deal_import.js dds_web_play.js dds_web_sample_deals.js dds_web_solve.js coi-serviceworker.js; do
+            cp "/tmp/bridge-dds/web/$f" "BridgeDD/$f"
+          done
+          for f in dds_web_wasm.js dds_web_wasm_bin.js; do
+            curl --fail --location --retry 3 --silent --show-error "https://dds-bridge.github.io/dds/$f" -o "BridgeDD/$f"
+            test -s "BridgeDD/$f"
+          done
+          cp BridgeDD-source/coach.js BridgeDD-source/coach.css BridgeDD-source/coach_rules.js BridgeDD-source/manifest.webmanifest BridgeDD-source/icon.svg BridgeDD/
+          cp /tmp/bridge-dds/LICENSE BridgeDD/DDS_LICENSE.txt
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path("BridgeDD/dds_web.html")
+          html=p.read_text()
+          assert '<html lang="en">' in html
+          assert '</head>' in html and '</body>' in html
+          html=html.replace('<html lang="en">','<html lang="fr">')
+          html=html.replace('<title>DDS Web — Double Dummy Solver</title>', '<title>Bridge DD · Jeu interactif</title>')
+          html=html.replace('</head>','<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n<meta name="theme-color" content="#304a94">\n<link rel="manifest" href="manifest.webmanifest">\n<link rel="stylesheet" href="coach.css">\n</head>')
+          html=html.replace('</body>','<script src="coach_rules.js"></script>\n<script src="coach.js"></script>\n</body>')
+          Path("BridgeDD/index.html").write_text(html)
+          PY
+          node --check BridgeDD/coach.js
+          node --check BridgeDD/coach_rules.js
+          node --check BridgeDD/dds_web_play.js
+          test -s BridgeDD/index.html
+          test -s BridgeDD/dds_web_wasm_bin.js
+      - name: Publier uniquement le dossier BridgeDD
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add BridgeDD/
+          if git diff --cached --quiet; then
+            echo "Déjà à jour."
+          else
+            git commit -m "Build Bridge DD with official DDS Web WASM"
+            git push origin HEAD:main
+          fi
