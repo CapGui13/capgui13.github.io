@@ -68,6 +68,12 @@ body>button,body>#sample-deals{margin:5px 3px!important;min-height:40px;height:a
     margin:3px 2px!important;padding:3px 7px!important;
     font-size:12px!important;border-radius:7px!important;
   }
+  /* Commandes regroupées sur une seule ligne. */
+  body>button,body>#sample-deals {
+    margin:2px 1px!important;padding:3px 5px!important;
+    font-size:11px!important;min-height:28px!important;height:28px!important;
+  }
+  body>#sample-deals {width:94px;max-width:94px}
   #play-bar {margin:2px 6px;padding:0;min-height:0}
   #play-bar button {min-height:28px}
   #play-hint {margin:3px 7px!important;padding:0!important;font-size:11px!important}
@@ -99,6 +105,23 @@ body>button,body>#sample-deals{margin:5px 3px!important;min-height:40px;height:a
   .grid-item.hand-north,.grid-item.hand-south {
     justify-self:center!important;width:min(100%,375px)!important;
   }
+  /* Marques de position : aucune hauteur supplémentaire. */
+  .grid-item.hand-north,.grid-item.hand-east,
+  .grid-item.hand-south,.grid-item.hand-west {position:relative!important}
+  .grid-item.hand-north::after,.grid-item.hand-east::after,
+  .grid-item.hand-south::after,.grid-item.hand-west::after{
+    position:absolute;right:3px;top:2px;
+    display:grid;place-items:center;
+    width:17px;height:17px;
+    font:700 11px/1 -apple-system,BlinkMacSystemFont,sans-serif;
+    background:#dfe8f6;color:#46618c;
+    border-radius:4px;pointer-events:none;opacity:.88;
+  }
+  .grid-item.hand-north::after{content:"N"}
+  .grid-item.hand-east::after{content:"E"}
+  .grid-item.hand-south::after{content:"S"}
+  .grid-item.hand-west::after{content:"O"}
+
   /* Les <br> hérités de DDS étaient la cause des gigantesques espaces. */
   .grid-item.hand-north>br,.grid-item.hand-east>br,
   .grid-item.hand-south>br,.grid-item.hand-west>br {display:none!important}
