@@ -23,6 +23,23 @@
         button.firstChild.nodeValue=name;
       }
     });
+    // Le pli central est rendu séparément par DDS et ne partage pas le
+    // data-card des mains. On traduit uniquement le dernier nœud texte.
+    document.querySelectorAll("#trick-status .trick-card").forEach(card=>{
+      const last=card.lastChild;
+      if(last?.nodeType!==3)return;
+      const translated=names[last.nodeValue?.trim()]||null;
+      if(translated&&last.nodeValue!==translated)last.nodeValue=translated;
+    });
+  }
+  function localizePlayControls(){
+    const change=$("edit-hands");
+    if(change&&change.textContent!=="Modifier la donne")change.textContent="Modifier la donne";
+    const hint=$("play-hint");
+    const french="Touche une carte bleue pour la jouer. Utilise Annuler pour revenir en arrière.";
+    if(hint&&hint.textContent!==french)hint.textContent=french;
+    const status=$("trick-status");
+    if(status)status.setAttribute("aria-label","Pli en cours");
   }
   function verdict(text,kind="neutral"){
     const el=$("coach-verdict");
@@ -30,6 +47,7 @@
     el.className="coach-verdict "+kind;el.textContent=text;
   }
   function update() {
+    localizePlayControls();
     const state=window.playState;
     document.body.classList.toggle("coach-training",mode==="training"&&!reveal);
     document.body.classList.toggle("coach-analysis",mode==="analysis"||reveal);
@@ -138,7 +156,7 @@
     translateSamplePlaceholder();
     window.addEventListener("load",translateSamplePlaceholder,{once:true});
     const playhint=$("play-hint");if(playhint)playhint.textContent="Touche une carte jouable. Son verdict apparaît après le coup. Retour arrière avec « Annuler ».";
-    intercept();update();
+    intercept();localizePlayControls();update();
     const grid=document.querySelector(".grid-outer");
     if(grid)new MutationObserver(translateHonors).observe(grid,{childList:true,subtree:true});
     translateHonors();
