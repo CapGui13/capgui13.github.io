@@ -10,6 +10,10 @@
   const history=[];
 
   // Traduction visuelle des figures seulement : DDS conserve ses codes K/Q/J/T.
+  function translateSamplePlaceholder(){
+    const option=$("sample-deals")?.querySelector("option[disabled]");
+    if(option&&option.textContent!=="Donnes…")option.textContent="Donnes…";
+  }
   function translateHonors(){
     const names={K:"R",Q:"D",J:"V",T:"10"};
     document.querySelectorAll(".hand-card[data-card]").forEach(button=>{
@@ -33,7 +37,7 @@
     $("coach-reveal").textContent=reveal?"Masquer les indices":"Voir les indices";
     $("coach-reveal").disabled=mode==="analysis"||!state;
     $("coach-undo").disabled=!state||!state.history.length;
-    $("coach-start").textContent=state?"↻ Recommencer":"▶ Jouer la donne";
+    $("coach-start").textContent=state?"↻ Rejouer":"▶ Jouer";
     const count=state&&window.playDealCardCount?window.playDealCardCount(state):52;
     $("coach-step").textContent=state
       ? (state.history.length>=count?"Donne terminée":("Carte "+(state.history.length+1)+" sur "+count))
@@ -102,7 +106,7 @@
       <label>Déclarant<select id="coach-seat"><option value="south">Sud</option><option value="north">Nord</option><option value="east">Est</option><option value="west">Ouest</option></select></label>
       <label>Niveau<select id="coach-level"><option>1</option><option>2</option><option>3</option><option selected>4</option><option>5</option><option>6</option><option>7</option></select></label>
       <label>Contrat<select id="coach-strain"><option value="S">♠</option><option value="H">♥</option><option value="D">♦</option><option value="C">♣</option><option value="N">SA</option></select></label>
-      <button id="coach-start" type="button" class="coach-primary">▶ Jouer la donne</button>
+      <button id="coach-start" type="button" class="coach-primary">▶ Jouer</button>
     </div>
     <div class="coach-actions">
       <button id="coach-mode" type="button">Mode entraînement</button>
@@ -128,10 +132,11 @@
     $("coach-mode").addEventListener("click",()=>{mode=mode==="training"?"analysis":"training";reveal=false;refresh();});
     $("coach-reveal").addEventListener("click",()=>{reveal=!reveal;refresh();});
     for(const btn of document.querySelectorAll("body>button")){
-      const translation={"Clear entries":"Effacer","Import deal…":"Importer PBN","Rotate the hands clockwise":"Tourner les mains"};
+      const translation={"Clear entries":"Effacer","Import deal…":"Importer","Rotate the hands clockwise":"Tourner"};
       if(translation[btn.textContent.trim()])btn.textContent=translation[btn.textContent.trim()];
     }
-    const sample=$("sample-deals");if(sample){const disabled=sample.querySelector("option[disabled]");if(disabled)disabled.textContent="Donne d'exemple…";}
+    translateSamplePlaceholder();
+    window.addEventListener("load",translateSamplePlaceholder,{once:true});
     const playhint=$("play-hint");if(playhint)playhint.textContent="Touche une carte jouable. Son verdict apparaît après le coup. Retour arrière avec « Annuler ».";
     intercept();update();
     const grid=document.querySelector(".grid-outer");
