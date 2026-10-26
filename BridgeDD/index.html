@@ -1,0 +1,224 @@
+<!doctype html>
+
+<!-- Copyright 2020-2026 Adam Wildavsky
+
+     Use of this source code is governed by an MIT-style
+     license that can be found in the LICENSE file or at
+     https://opensource.org/licenses/MIT
+
+     Build WASM (from repo root): ./web/update_wasm.sh
+     Serve with cross-origin isolation (required for WASM threads):
+       python3 web/serve_web.py
+     Then open http://127.0.0.1:8080/dds_web.html
+     (file:// UI works; solving needs SharedArrayBuffer via HTTP + COOP/COEP.)
+     GitHub Pages cannot set COOP/COEP; coi-serviceworker.js supplies them.
+-->
+
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <!-- Safari / iOS WebKit (incl. Firefox on iPhone) ignore COEP credentialless
+         for isolation. DDS assets are same-origin, so require-corp is enough. -->
+    <script>
+    window.coi = { coepCredentialless: () => false };
+    </script>
+    <script src="coi-serviceworker.js"></script>
+    <link rel="stylesheet" type="text/css" href="dds_web.css">
+    <title>Bridge DD · Jeu interactif</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#304a94">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="coach.css">
+</head>
+<body onload="pageLoad()">
+    <header class="site-header">
+        <h1>DDS Web</h1>
+        <p class="site-tagline">Double dummy bridge solver in your browser</p>
+        <p class="site-repo">
+            <a href="https://github.com/dds-bridge/dds"
+               target="_blank"
+               rel="noopener noreferrer">Source on GitHub</a>
+        </p>
+    </header>
+
+    <p class="deal-entry-hint">
+    Enter a 52-card deal using only these pips: <span id=valid-pips></span>
+    </p>
+
+    <button type="button" onclick="clearTestData()">Clear entries</button>
+    <button type="button" onclick="chooseDealFile()">Import deal…</button>
+    <input id="import-deal-file"
+           type="file"
+           accept=".pbn,.lin,.dlm,.txt,text/plain"
+           hidden
+           onchange="handleDealFileSelected(this)">
+    <select id="sample-deals"
+            aria-label="Sample deals"
+            onchange="handleSampleDealSelected(this)">
+        <option value="" selected disabled>Sample deals…</option>
+    </select>
+    <button type="button" onclick="rotateClockwise()">Rotate the hands clockwise</button>
+
+    <div id="play-bar" hidden>
+        <button type="button" id="edit-hands" onclick="exitPlay()">Edit hands</button>
+    </div>
+    <p id="play-hint" hidden>
+        Drag a highlighted card onto the trick (or click it).
+        Each card shows how the contract ends (=, +N, –N) with best play and defense.
+        Undo with ⌘/Ctrl-Z.
+    </p>
+
+    <br/>
+    <br/>
+
+    <div class="grid-outer">
+    <div class="grid-container">
+        <div class="grid-item hand-north">
+            <span class="hand-suit"><spade-suit>♠</spade-suit><span id="north_spades_cards" class="hand-holding"></span><input id="north_spades" class="hand-suit-input" name="north spades" aria-label="North spades" type="text" autocomplete="off" spellcheck="false"></span><br>
+            <span class="hand-suit"><heart-suit>♥</heart-suit><span id="north_hearts_cards" class="hand-holding"></span><input id="north_hearts" class="hand-suit-input" name="north hearts" aria-label="North hearts" type="text" autocomplete="off" spellcheck="false"></span><br>
+            <span class="hand-suit"><diamond-suit>♦</diamond-suit><span id="north_diamonds_cards" class="hand-holding"></span><input id="north_diamonds" class="hand-suit-input" name="north diamonds" aria-label="North diamonds" type="text" autocomplete="off" spellcheck="false"></span><br>
+            <span class="hand-suit"><club-suit>♣</club-suit><span id="north_clubs_cards" class="hand-holding"></span><input id="north_clubs" class="hand-suit-input" name="north clubs" aria-label="North clubs" type="text" autocomplete="off" spellcheck="false"></span><br>
+            <div id="north-card-count" class="hand-card-count" aria-live="polite" hidden></div>
+        </div>
+        <div class="grid-item hand-east">
+            <span class="hand-suit"><spade-suit>♠</spade-suit><span id="east_spades_cards" class="hand-holding"></span><input id="east_spades" class="hand-suit-input" name="east spades" aria-label="East spades" type="text" autocomplete="off" spellcheck="false"></span><br>
+            <span class="hand-suit"><heart-suit>♥</heart-suit><span id="east_hearts_cards" class="hand-holding"></span><input id="east_hearts" class="hand-suit-input" name="east hearts" aria-label="East hearts" type="text" autocomplete="off" spellcheck="false"></span><br>
+            <span class="hand-suit"><diamond-suit>♦</diamond-suit><span id="east_diamonds_cards" class="hand-holding"></span><input id="east_diamonds" class="hand-suit-input" name="east diamonds" aria-label="East diamonds" type="text" autocomplete="off" spellcheck="false"></span><br>
+            <span class="hand-suit"><club-suit>♣</club-suit><span id="east_clubs_cards" class="hand-holding"></span><input id="east_clubs" class="hand-suit-input" name="east clubs" aria-label="East clubs" type="text" autocomplete="off" spellcheck="false"></span><br>
+            <div id="east-card-count" class="hand-card-count" aria-live="polite" hidden></div>
+        </div>
+        <div class="grid-item hand-south">
+            <span class="hand-suit"><spade-suit>♠</spade-suit><span id="south_spades_cards" class="hand-holding"></span><input id="south_spades" class="hand-suit-input" name="south spades" aria-label="South spades" type="text" autocomplete="off" spellcheck="false"></span><br>
+            <span class="hand-suit"><heart-suit>♥</heart-suit><span id="south_hearts_cards" class="hand-holding"></span><input id="south_hearts" class="hand-suit-input" name="south hearts" aria-label="South hearts" type="text" autocomplete="off" spellcheck="false"></span><br>
+            <span class="hand-suit"><diamond-suit>♦</diamond-suit><span id="south_diamonds_cards" class="hand-holding"></span><input id="south_diamonds" class="hand-suit-input" name="south diamonds" aria-label="South diamonds" type="text" autocomplete="off" spellcheck="false"></span><br>
+            <span class="hand-suit"><club-suit>♣</club-suit><span id="south_clubs_cards" class="hand-holding"></span><input id="south_clubs" class="hand-suit-input" name="south clubs" aria-label="South clubs" type="text" autocomplete="off" spellcheck="false"></span><br>
+            <div id="south-card-count" class="hand-card-count" aria-live="polite" hidden></div>
+        </div>
+        <div class="grid-item hand-west">
+            <span class="hand-suit"><spade-suit>♠</spade-suit><span id="west_spades_cards" class="hand-holding"></span><input id="west_spades" class="hand-suit-input" name="west spades" aria-label="West spades" type="text" autocomplete="off" spellcheck="false"></span><br>
+            <span class="hand-suit"><heart-suit>♥</heart-suit><span id="west_hearts_cards" class="hand-holding"></span><input id="west_hearts" class="hand-suit-input" name="west hearts" aria-label="West hearts" type="text" autocomplete="off" spellcheck="false"></span><br>
+            <span class="hand-suit"><diamond-suit>♦</diamond-suit><span id="west_diamonds_cards" class="hand-holding"></span><input id="west_diamonds" class="hand-suit-input" name="west diamonds" aria-label="West diamonds" type="text" autocomplete="off" spellcheck="false"></span><br>
+            <span class="hand-suit"><club-suit>♣</club-suit><span id="west_clubs_cards" class="hand-holding"></span><input id="west_clubs" class="hand-suit-input" name="west clubs" aria-label="West clubs" type="text" autocomplete="off" spellcheck="false"></span><br>
+            <div id="west-card-count" class="hand-card-count" aria-live="polite" hidden></div>
+        </div>
+        <div class="grid-item grid-filler grid-filler-nw">
+            <div id="play-score"
+                 hidden
+                 aria-live="polite"
+                 aria-label="Tricks won"></div>
+        </div>
+        <div class="grid-item grid-filler grid-filler-ne">
+            <div id="contract-status" hidden></div>
+        </div>
+        <div class="grid-item grid-filler grid-filler-center">
+            <div id="deck-status"
+                 role="group"
+                 aria-label="Cards not yet entered in the diagram"></div>
+            <div id="trick-status"
+                 class="trick-status"
+                 role="status"
+                 aria-live="polite"
+                 aria-label="Current trick"
+                 hidden></div>
+        </div>
+        <div class="grid-item grid-filler grid-filler-sw" aria-hidden="true"></div>
+        <div class="grid-item grid-filler grid-filler-se">
+            <div id="result-table-hint" class="result-table-hint" hidden></div>
+            <table id="result-table"
+                   cellspacing="2"
+                   cellpadding="2"
+                   border="1">
+               <tr>
+                    <th valign="top"></th>
+                    <th valign="top"><club-suit>♣</club-suit></th>
+                    <th valign="top"><diamond-suit>♦</diamond-suit></th>
+                    <th valign="top"><heart-suit>♥</heart-suit></th>
+                    <th valign="top"><spade-suit>♠</spade-suit></th>
+                    <th valign="top">NT</th>
+                </tr>
+                <tr>
+                    <th valign="top">N</th>
+                    <td valign="top"><br></td>
+                    <td valign="top"><br></td>
+                    <td valign="top"><br></td>
+                    <td valign="top"><br></td>
+                    <td valign="top"><br></td>
+                </tr>
+                <tr>
+                    <th valign="top">E</th>
+                    <td valign="top"><br></td>
+                    <td valign="top"><br></td>
+                    <td valign="top"><br></td>
+                    <td valign="top"><br></td>
+                    <td valign="top"><br></td>
+                </tr>
+                <tr>
+                    <th valign="top">S</th>
+                    <td valign="top"><br></td>
+                    <td valign="top"><br></td>
+                    <td valign="top"><br></td>
+                    <td valign="top"><br></td>
+                    <td valign="top"><br></td>
+                </tr>
+                <tr>
+                    <th valign="top">W</th>
+                    <td valign="top"><br></td>
+                    <td valign="top"><br></td>
+                    <td valign="top"><br></td>
+                    <td valign="top"><br></td>
+                    <td valign="top"><br></td>
+                </tr>
+            </table>
+            <p id="result" aria-live="polite"></p>
+        </div>
+    </div>
+    </div>
+
+    <section id="faq" class="faq" aria-labelledby="faq-heading">
+        <h2 id="faq-heading">FAQ</h2>
+        <details>
+            <summary>What is DDS Web?</summary>
+            <p>
+                DDS Web is a browser demo of
+                <a href="https://github.com/dds-bridge/dds"
+                   target="_blank"
+                   rel="noopener noreferrer">DDS</a>,
+                a double dummy originally written by Bo Haglund. It runs entirely
+                client-side via WebAssembly: enter a deal (or import one),
+                and the page fills a double-dummy table of max tricks by
+                declarer and strain.
+            </p>
+        </details>
+        <details>
+            <summary>Does my deal leave my browser?</summary>
+            <p>
+                No. Cards, imports, and solve results stay on your device.
+                The solver module is downloaded once with the page; nothing
+                is sent to a server to analyze a deal.
+            </p>
+        </details>
+        <details>
+            <summary>How do I play through a contract?</summary>
+            <p>
+                After the double-dummy table appears, click a cell to enter
+                play for that declarer and strain (or that seat on lead for a
+                partial deal). Drag or click a highlighted card to play it;
+                each card shows the contract outcome with best play and
+                defense. Undo with ⌘/Ctrl-Z, or choose Edit hands to leave
+                play mode.
+            </p>
+        </details>
+    </section>
+
+    <script src="dds_web_wasm_bin.js"></script>
+    <script src="dds_web_wasm.js"></script>
+    <script src="dds_web_deal_import.js"></script>
+    <script src="dds_web_core.js"></script>
+    <script src="dds_web_solve.js"></script>
+    <script src="dds_web_play.js"></script>
+    <script src="dds_web_sample_deals.js"></script>
+    <script src="dds_web.js"></script>
+<script src="coach_rules.js"></script>
+<script src="coach.js"></script>
+</body>
+</html>
