@@ -15,6 +15,16 @@ const handCount=seat=>SUITS.reduce((n,[suit])=>n+(input(seat,suit)?.value.length
 const owner=(suit,pip)=>SEATS.find(([seat])=>(input(seat,suit)?.value||"").includes(pip))?.[0]||null;
 function message(text){const el=byId("bridge-kb-message");if(el)el.textContent=text;}
 function snapshot(){return fields().map(el=>el?.value||"");}
+/* Les touches emploient le français ; les figures affichées aussi.
+   Les codes DDS (K,Q,J,T) restent inchangés dans data-card et les calculs. */
+function frenchCardLabels(){
+ const titles={K:"R",Q:"D",J:"V",T:"10"};
+ document.querySelectorAll(".hand-card[data-card]").forEach(button=>{
+  const pip=button.dataset.card?.[1],label=titles[pip];
+  if(!label||!button.firstChild||button.firstChild.nodeType!==3)return;
+  if(button.firstChild.nodeValue!==label)button.firstChild.nodeValue=label;
+ });
+}
 function render(){
  const host=byId("bridge-keyboard");
  if(!host)return;
@@ -49,6 +59,7 @@ function render(){
   const selected=el?.id===state.seat+"_"+state.suit;
   row.classList.toggle("bridge-kb-selected",selected&&!playing());
  });
+ frenchCardLabels();
 }
 function select(seat,suit){
  if(playing()||!SEATS.some(x=>x[0]===seat)||!SUITS.some(x=>x[0]===suit))return;
@@ -146,6 +157,8 @@ function init(){
  new MutationObserver(changes=>{
   if(changes.some(x=>x.attributeName==="class"))render();
  }).observe(document.body,{attributes:true,attributeFilter:["class"]});
+ const grid=document.querySelector(".grid-outer");
+ if(grid)new MutationObserver(frenchCardLabels).observe(grid,{childList:true,subtree:true});
  render();
 }
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init,{once:true});
