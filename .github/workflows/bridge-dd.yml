@@ -38,7 +38,7 @@ jobs:
           assert '</head>' in html and '</body>' in html
           html=html.replace('<html lang="en">','<html lang="fr">')
           html=html.replace('<title>DDS Web — Double Dummy Solver</title>', '<title>Bridge DD · Jeu interactif</title>')
-          html=html.replace('</head>','<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n<meta name="theme-color" content="#304a94">\n<link rel="manifest" href="manifest.webmanifest">\n<link rel="stylesheet" href="coach.css?v=game-v7">\n</head>')
+          html=html.replace('</head>','<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n<meta name="theme-color" content="#304a94">\n<link rel="manifest" href="manifest.webmanifest">\n<link rel="stylesheet" href="coach.css?v=nowrap-v8">\n</head>')
           html=html.replace('</body>','<script src="coach_rules.js"></script>\n<script src="coach.js?v=game-v7"></script>\n\n</body>')
           Path("BridgeDD/index.html").write_text(html)
           PY
