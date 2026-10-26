@@ -28,129 +28,172 @@ body>button,body>#sample-deals{margin:5px 3px!important;min-height:40px;height:a
 .hand-card-playable{outline:1px solid #456fb9;outline-offset:0}
 .coach-training .hand-card-tricks,.coach-training #result-table{display:none!important}
 
-/* Clavier bridge tactile repliable. */
-#bridge-keyboard{
-  position:fixed;bottom:0;left:0;right:0;z-index:800;
-  padding:9px max(10px,env(safe-area-inset-right)) calc(9px + env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-left));
-  max-width:100%;background:#fff;color:#193052;
-  border-top:2px solid #7395cb;box-shadow:0 -6px 25px #122b4b30;
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-}
-#bridge-keyboard[hidden],body.playing #bridge-keyboard{display:none!important}
-#bridge-keyboard button{
-  font-family:inherit;color:#1c3154;border:1px solid #b8c7df;
-  background:#f5f8fe;border-radius:9px;min-height:38px;
-  font-size:14px;font-weight:650;touch-action:manipulation;
-  -webkit-tap-highlight-color:transparent;
-}
-#bridge-keyboard button.active{background:#31549a;color:#fff;border-color:#31549a}
-#bridge-keyboard button:disabled{opacity:.38}
-.bridge-kb-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:7px}
-.bridge-kb-head strong{font-size:15px;margin-right:8px}
-.bridge-kb-head span{font-size:12px;color:#576c89}
-.bridge-kb-head button{min-height:32px!important;padding:4px 10px!important}
-.bridge-kb-seats,.bridge-kb-suits{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;margin:5px 0}
-.bridge-kb-suits button{font-size:12px!important}
-.bridge-kb-ranks{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px;margin:7px 0}
-#bridge-keyboard .bridge-kb-ranks button{font-size:17px!important;min-height:43px}
-#bridge-keyboard .bridge-kb-ranks button.taken{text-decoration:line-through;color:#8795ac}
-.bridge-kb-footer{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin-top:7px}
-.bridge-kb-footer button{font-size:12px!important;padding:4px 10px!important;min-height:32px!important}
-.bridge-kb-footer span{font-size:11px;color:#536782;flex:1;min-width:90px}
-body.bridge-keyboard-open{padding-bottom:285px!important}
-#bridge-keyboard.bridge-kb-closed{padding-top:6px;padding-bottom:calc(6px + env(safe-area-inset-bottom))}
-.bridge-kb-closed .bridge-kb-content{display:none}
-body:not(.bridge-keyboard-open):not(.playing){padding-bottom:70px!important}
-.grid-item .hand-suit.bridge-kb-selected{
-  background:#e7effd!important;border-radius:6px;box-shadow:inset 3px 0 #315fbd;
-}
-@media(min-width:651px){
-  #bridge-keyboard{max-width:610px;left:50%;right:auto;width:100%;transform:translateX(-50%);border-radius:14px 14px 0 0}
-  body.bridge-keyboard-open{padding-bottom:295px!important}
-}
 
-/* Diagramme iPhone : supprime les <br> parasites et garde de vraies cibles. */
-@media(max-width:650px){
-  #coach-toolbar{padding:10px 9px}
-  .coach-title strong{font-size:20px}
-  #coach-toolbar select{font-size:14px;padding:6px 5px}
-  .grid-outer{width:calc(100% - 8px);padding:3px!important;overflow:visible}
-  .grid-container{
+/* Bridge DD mobile — affichage de la donne entière sans clavier ajouté. */
+@media (max-width:650px) {
+  html,body {width:100%;max-width:100%;overflow-x:hidden}
+  body {padding-bottom:8px!important}
+  #coach-toolbar {padding:6px 7px 7px;box-shadow:none}
+  .coach-title {margin:0 0 3px}
+  .coach-title strong {font-size:17px}
+  .coach-title small {display:none}
+  .coach-fields {
+    display:grid;grid-template-columns:repeat(3,minmax(0,1fr)) minmax(96px,1.3fr);
+    align-items:end;gap:4px;margin:2px 0 4px;
+  }
+  .coach-fields label {min-width:0;font-size:10px;gap:2px}
+  #coach-toolbar select {
+    min-height:29px;height:29px;max-width:100%;
+    border-radius:7px;padding:3px 2px;font-size:13px;
+  }
+  #coach-toolbar .coach-primary {
+    min-width:0;min-height:29px;height:29px;
+    border-radius:7px;padding:3px 4px;font-size:12px;
+    white-space:nowrap;
+  }
+  .coach-actions {display:flex;flex-wrap:nowrap;gap:4px;margin:4px 0}
+  #coach-toolbar .coach-actions>button {
+    min-width:0;min-height:30px;height:30px;
+    padding:3px 2px!important;border-radius:7px;font-size:11px!important;
+  }
+  #coach-step,#coach-progress {display:none}
+  .coach-verdict {
+    padding:5px 8px;font-size:12px;
+    line-height:1.3;border-radius:7px;
+  }
+  .deal-entry-hint {display:none}
+  body>br {display:none!important}
+  body>button,body>#sample-deals {
+    min-height:30px!important;height:30px!important;
+    margin:3px 2px!important;padding:3px 7px!important;
+    font-size:12px!important;border-radius:7px!important;
+  }
+  #play-bar {margin:2px 6px;padding:0;min-height:0}
+  #play-bar button {min-height:28px}
+  #play-hint {margin:3px 7px!important;padding:0!important;font-size:11px!important}
+  
+  .grid-outer {
+    width:calc(100% - 8px)!important;
+    max-width:420px!important;margin:5px auto!important;
+    padding:3px!important;border-radius:8px!important;
+    background:#e4ecf7!important;
+  }
+  .grid-container {
     display:grid!important;
-    grid-template-areas:"north north north" "west center east" "south south south" "se se se"!important;
-    grid-template-columns:minmax(0,40%) minmax(0,20%) minmax(0,40%)!important;
+    grid-template-areas:"north north north" "west center east" "south south south"!important;
+    grid-template-columns:minmax(0,42%) minmax(0,16%) minmax(0,42%)!important;
+    grid-template-rows:auto auto auto!important;
     gap:2px!important;width:100%;
+    background:transparent!important;
   }
-  .grid-item.hand-north,.grid-item.hand-south,
-  .grid-item.hand-east,.grid-item.hand-west{
-    display:flex!important;flex-direction:column!important;align-items:stretch!important;
-    font-size:17px!important;gap:4px!important;
-    min-width:0;max-width:100%;overflow:visible!important;
-    padding:8px 3px!important;text-align:left!important;
+  .grid-item.hand-north,.grid-item.hand-east,
+  .grid-item.hand-south,.grid-item.hand-west {
+    display:flex!important;flex-direction:column!important;
+    align-items:stretch!important;
+    padding:3px 2px!important;margin:0!important;
+    font-size:15px!important;line-height:1!important;
+    min-width:0!important;max-width:100%!important;
+    gap:1px!important;overflow:visible!important;
+    text-align:left!important;
   }
-  .grid-item.hand-north,.grid-item.hand-south{
-    justify-self:center;width:min(96%,370px);
+  .grid-item.hand-north,.grid-item.hand-south {
+    justify-self:center!important;width:min(100%,375px)!important;
   }
-  .grid-item.hand-north>br,.grid-item.hand-south>br,
-  .grid-item.hand-east>br,.grid-item.hand-west>br{display:none!important}
-  .grid-item .hand-suit{
+  /* Les <br> hérités de DDS étaient la cause des gigantesques espaces. */
+  .grid-item.hand-north>br,.grid-item.hand-east>br,
+  .grid-item.hand-south>br,.grid-item.hand-west>br {display:none!important}
+  .grid-item .hand-suit {
     display:flex!important;align-items:flex-start!important;
-    font-size:17px!important;gap:3px!important;
-    white-space:normal!important;line-height:1.1!important;
-    min-height:40px!important;width:100%;min-width:0;
-    margin:0!important;padding:1px 0!important;
+    gap:2px!important;padding:0!important;margin:0!important;
+    font-size:15px!important;line-height:1!important;
+    width:100%!important;min-width:0!important;
+    min-height:24px!important;white-space:normal!important;
+    position:relative!important;
   }
   .grid-item .hand-suit> :is(spade-suit,heart-suit,diamond-suit,club-suit){
-    flex:0 0 17px!important;width:17px!important;
-    font-size:18px!important;padding-top:10px;text-align:center;
+    flex:0 0 14px!important;width:14px!important;
+    text-align:center!important;font-size:16px!important;
+    line-height:24px!important;
   }
   .grid-item .hand-holding{
-    display:flex!important;flex:1 1 auto;min-width:0;max-width:100%;
-    flex-wrap:wrap!important;align-items:flex-start;gap:4px!important;
+    display:flex!important;flex:1 1 0!important;
+    min-width:0!important;max-width:100%!important;
+    flex-wrap:wrap!important;align-items:flex-start!important;
+    gap:2px!important;
   }
-  .grid-item .hand-card{
+  .grid-item .hand-card {
+    box-sizing:border-box!important;
     display:inline-flex!important;align-items:center!important;justify-content:center!important;
-    flex:0 0 34px!important;box-sizing:border-box!important;
-    width:34px!important;min-width:34px!important;
-    height:40px!important;min-height:40px!important;
-    padding:0 2px!important;margin:0!important;
-    font:600 16px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif!important;
-    border:1px solid #a9b6cc!important;border-radius:6px!important;
-    color:#1c3154!important;background:#fff!important;touch-action:manipulation!important;
+    flex:0 0 23px!important;
+    width:23px!important;min-width:23px!important;
+    height:24px!important;min-height:24px!important;
+    margin:0!important;padding:0!important;
+    border:1px solid #a8b5c9!important;border-radius:4px!important;
+    background:#fff!important;color:#223452!important;
+    font:600 14px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif!important;
+    touch-action:manipulation!important;
+    -webkit-tap-highlight-color:rgba(49,84,154,.18);
   }
-  .grid-item .hand-card.hand-card-playable{
-    background:#e9f3ff!important;border-color:#4577bf!important;
-    box-shadow:inset 0 0 0 1px #a3c2ed;
+  .grid-item .hand-card.hand-card-playable {
+    background:#e6f3ff!important;
+    border-color:#4171b4!important;
+    box-shadow:inset 0 0 0 1px rgba(65,113,180,.28);
   }
-  .grid-item .hand-card:disabled{opacity:.65}
-  .grid-item .hand-card:focus-visible{outline:2px solid #1b5cbe!important;outline-offset:1px}
-  .grid-item .hand-card-tricks{font-size:9px!important;bottom:0;right:1px}
-  .grid-item .hand-suit-input{
-    width:1px!important;min-width:1px!important;max-width:1px!important;
-    flex:0 0 1px!important;position:absolute!important;
-    opacity:0!important;pointer-events:none!important;
+  .grid-item .hand-card:disabled {opacity:.72}
+  .grid-item .hand-card:focus-visible{
+    outline:2px solid #2464bd!important;outline-offset:1px!important
   }
-  .grid-item.grid-filler-center{
+  .grid-item .hand-card-tricks{
+    bottom:0;right:1px;font-size:8px!important
+  }
+  /* La saisie d'origine DDS reste accessible en touchant une couleur.
+     Aucun clavier personnalisé n'est affiché en permanence. */
+  .grid-item .hand-suit-input {
+    position:absolute!important;top:0;right:0;
+    width:1px!important;min-width:1px!important;
+    height:1px!important;opacity:0!important;
+    padding:0!important;border:0!important;
+    pointer-events:none!important;
+  }
+  .grid-item.grid-filler-center {
     display:flex!important;align-items:center!important;justify-content:center!important;
-    padding:1px!important;min-height:74px!important;overflow:visible!important;
+    min-width:0!important;min-height:90px!important;
+    padding:2px 0!important;overflow:visible!important;
+    font-size:14px!important;
   }
-  .trick-status{
-    font-size:12px!important;line-height:1.1!important;
-    gap:3px!important;grid-template-columns:repeat(3,minmax(14px,auto))!important;
+  .grid-item.grid-filler-center #deck-status {display:none!important}
+  .trick-status {
+    gap:2px!important;font-size:12px!important;
+    grid-template-columns:repeat(3,minmax(13px,auto))!important;
+    line-height:1.1!important;
   }
-  .trick-status .trick-card{min-width:18px!important;padding:3px 2px!important}
-  .grid-filler-nw,.grid-filler-ne,.grid-filler-sw{display:none!important}
-  body.playing .grid-filler-se,body.playing .result-table-hint{display:none!important}
-  .grid-filler-se{grid-area:se;justify-self:stretch;min-width:0;overflow-x:auto;padding:6px!important}
-  #result-table{width:100%;font-size:14px}
-  .hand-card-count{font-size:11px;padding-left:18px}
-  #play-hint{font-size:12px;margin:4px 6px}
+  .trick-status .trick-card{
+    min-width:17px!important;padding:2px 1px!important;border-radius:3px
+  }
+  .grid-filler-nw,.grid-filler-ne,.grid-filler-sw,.grid-filler-se {
+    display:none!important;
+  }
+  /* Le contrat se choisit déjà en haut ; le tableau 20 cases reste masqué
+     sur mobile pour garder les quatre mains dans la hauteur disponible. */
+  #result-table,.result-table-hint {display:none!important}
+  .hand-card-count{font-size:10px!important;margin:1px 0;padding:0 0 0 15px}
 }
-@media(max-width:359px){
-  .grid-item .hand-card{
-    flex-basis:31px!important;width:31px!important;min-width:31px!important;
-    height:38px!important;min-height:38px!important;font-size:15px!important;
+@media (max-width:650px) and (max-height:740px){
+  .grid-item .hand-card {
+    flex-basis:22px!important;width:22px!important;min-width:22px!important;
+    height:22px!important;min-height:22px!important;font-size:13px!important;
   }
-  .grid-item .hand-holding{gap:3px!important}
-  #bridge-keyboard .bridge-kb-ranks button{font-size:15px!important}
+  .grid-item .hand-suit {min-height:22px!important}
+  .grid-item .hand-suit> :is(spade-suit,heart-suit,diamond-suit,club-suit) {
+    line-height:22px!important;
+  }
+  .grid-item.grid-filler-center {min-height:75px!important}
+}
+@media (max-width:359px){
+  .grid-item .hand-card {
+    flex-basis:21px!important;width:21px!important;min-width:21px!important;
+    height:22px!important;min-height:22px!important;font-size:13px!important;
+  }
+  .grid-item .hand-holding {gap:1px!important}
+  .grid-container {grid-template-columns:minmax(0,42%) minmax(0,16%) minmax(0,42%)!important}
 }

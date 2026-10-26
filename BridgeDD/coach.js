@@ -8,6 +8,18 @@
   const cardName=key=>(honors[key?.[1]]||key?.[1]||"")+(suits[key?.[0]]||"");
   let mode="training",reveal=false;
   const history=[];
+
+  // Traduction visuelle des figures seulement : DDS conserve ses codes K/Q/J/T.
+  function translateHonors(){
+    const names={K:"R",Q:"D",J:"V",T:"10"};
+    document.querySelectorAll(".hand-card[data-card]").forEach(button=>{
+      const pip=button.dataset.card?.charAt(1);
+      const name=names[pip];
+      if(name&&button.firstChild?.nodeType===3&&button.firstChild.nodeValue!==name){
+        button.firstChild.nodeValue=name;
+      }
+    });
+  }
   function verdict(text,kind="neutral"){
     const el=$("coach-verdict");
     if(!el)return;
@@ -122,6 +134,9 @@
     const sample=$("sample-deals");if(sample){const disabled=sample.querySelector("option[disabled]");if(disabled)disabled.textContent="Donne d'exemple…";}
     const playhint=$("play-hint");if(playhint)playhint.textContent="Touche une carte jouable. Son verdict apparaît après le coup. Retour arrière avec « Annuler ».";
     intercept();update();
+    const grid=document.querySelector(".grid-outer");
+    if(grid)new MutationObserver(translateHonors).observe(grid,{childList:true,subtree:true});
+    translateHonors();
   }
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init,{once:true});else init();
 })();
