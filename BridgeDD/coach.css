@@ -229,3 +229,82 @@ body>button,body>#sample-deals{margin:5px 3px!important;min-height:40px;height:a
   .grid-item .hand-holding {gap:1px!important}
   .grid-container {grid-template-columns:minmax(0,42%) minmax(0,16%) minmax(0,42%)!important}
 }
+
+
+/* V8 — Une rangée par couleur, même avec 13 cartes dans une main latérale.
+   Les mains N/S conservent leurs cartes 23px; seules O/E s'adaptent.
+   :has(.hand-card:nth-of-type(N)) détecte le nombre de cartes,
+   indépendamment des spans curseurs de saisie. */
+@media (max-width:650px) {
+  .grid-item.hand-west .hand-holding,
+  .grid-item.hand-east .hand-holding {
+    display:flex!important;
+    flex-wrap:nowrap!important;
+    min-width:0!important;
+    gap:1px!important;
+    overflow:visible!important;
+  }
+  .grid-item.hand-west .hand-holding > .hand-card,
+  .grid-item.hand-east .hand-holding > .hand-card {
+    flex:0 0 23px!important;
+    width:23px!important;
+    min-width:0!important;
+    padding:0!important;
+  }
+  .grid-item.hand-west .hand-holding:has(> .hand-card:nth-of-type(6)) > .hand-card,
+  .grid-item.hand-east .hand-holding:has(> .hand-card:nth-of-type(6)) > .hand-card {
+    flex:0 0 calc((100% - 5px) / 6)!important;
+    width:calc((100% - 5px) / 6)!important;
+    min-width:0!important;
+    font-size:13px!important;
+  }
+  .grid-item.hand-west .hand-holding:has(> .hand-card:nth-of-type(7)) > .hand-card,
+  .grid-item.hand-east .hand-holding:has(> .hand-card:nth-of-type(7)) > .hand-card {
+    flex:0 0 calc((100% - 6px) / 7)!important;
+    width:calc((100% - 6px) / 7)!important;
+    min-width:0!important;
+    font-size:12px!important;
+  }
+  .grid-item.hand-west .hand-holding:has(> .hand-card:nth-of-type(8)) > .hand-card,
+  .grid-item.hand-east .hand-holding:has(> .hand-card:nth-of-type(8)) > .hand-card {
+    flex:0 0 calc((100% - 7px) / 8)!important;
+    width:calc((100% - 7px) / 8)!important;
+    min-width:0!important;
+    font-size:11px!important;
+  }
+  .grid-item.hand-west .hand-holding:has(> .hand-card:nth-of-type(9)) > .hand-card,
+  .grid-item.hand-east .hand-holding:has(> .hand-card:nth-of-type(9)) > .hand-card {
+    flex:0 0 calc((100% - 8px) / 9)!important;
+    width:calc((100% - 8px) / 9)!important;
+    min-width:0!important;
+    font-size:10px!important;
+  }
+  .grid-item.hand-west .hand-holding:has(> .hand-card:nth-of-type(10)) > .hand-card,
+  .grid-item.hand-east .hand-holding:has(> .hand-card:nth-of-type(10)) > .hand-card {
+    flex:0 0 calc((100% - 9px) / 10)!important;
+    width:calc((100% - 9px) / 10)!important;
+    min-width:0!important;
+    font-size:9px!important;
+  }
+  .grid-item.hand-west .hand-holding:has(> .hand-card:nth-of-type(11)) > .hand-card,
+  .grid-item.hand-east .hand-holding:has(> .hand-card:nth-of-type(11)) > .hand-card {
+    flex:0 0 calc((100% - 10px) / 11)!important;
+    width:calc((100% - 10px) / 11)!important;
+    min-width:0!important;
+    font-size:8px!important;
+  }
+  .grid-item.hand-west .hand-holding:has(> .hand-card:nth-of-type(12)) > .hand-card,
+  .grid-item.hand-east .hand-holding:has(> .hand-card:nth-of-type(12)) > .hand-card {
+    flex:0 0 calc((100% - 11px) / 12)!important;
+    width:calc((100% - 11px) / 12)!important;
+    min-width:0!important;
+    font-size:8px!important;
+  }
+  .grid-item.hand-west .hand-holding:has(> .hand-card:nth-of-type(13)) > .hand-card,
+  .grid-item.hand-east .hand-holding:has(> .hand-card:nth-of-type(13)) > .hand-card {
+    flex:0 0 calc((100% - 12px) / 13)!important;
+    width:calc((100% - 12px) / 13)!important;
+    min-width:0!important;
+    font-size:7px!important;
+  }
+}
