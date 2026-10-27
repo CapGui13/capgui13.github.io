@@ -1,0 +1,14 @@
+const fs=require("node:fs"); const assert=require("node:assert/strict");
+const coach=fs.readFileSync("BridgeDD-source/coach.js","utf8");
+const ffb=fs.readFileSync("BridgeDD-source/ffb_import.js","utf8");
+const css=fs.readFileSync("BridgeDD-source/coach.css","utf8");
+assert.ok(coach.includes('setStage("photo");'),"First screen is photo");
+assert.ok(coach.includes('window.addEventListener("bridge:deal-imported"'),"Import transitions to contract");
+assert.ok(coach.includes('setStage("contract");'),"Contract step exists");
+assert.ok(coach.includes('setStage("play");'),"Successful contract starts play");
+assert.ok(coach.includes('window.scheduleDealSolve();'),"DDS recalculates card values");
+assert.ok(!coach.includes('id="coach-mode"'),"No training switch");
+assert.ok(!coach.includes('id="coach-reveal"'),"No hint switch");
+assert.ok(ffb.includes('window.dispatchEvent(new CustomEvent("bridge:deal-imported"'),"Importer sends confirmation event");
+assert.ok(css.includes('data-bridge-stage="photo"'),"Photo screen hides game");
+console.log("Wizard photo > contrat > jouer : tests passed");

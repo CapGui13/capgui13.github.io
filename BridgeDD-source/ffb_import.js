@@ -283,6 +283,7 @@ function applyDeal(){
   suitOrder.map(suit=>P.normalize(hands[seat][suit]).value).join("."));
  window.fillFormWithTestData(deal);
  closeDialog();
+ window.dispatchEvent(new CustomEvent("bridge:deal-imported",{detail:{source:"ffb"}}));
  $("ffb-file").value="";
  const state=$("coach-verdict");
  if(state){state.className="coach-verdict good";state.textContent="Donne FFB importée : 52 cartes validées. Choisis un contrat puis joue !";}
