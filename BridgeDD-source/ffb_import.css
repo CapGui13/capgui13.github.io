@@ -1,0 +1,45 @@
+/* Reconnaissance de captures FFB — écran de vérification tactile. */
+#ffb-select{background:#edf3ff!important;border-color:#b6c9e9!important;color:#23427c!important;font-weight:700!important}
+#ffb-dialog[hidden],#ffb-complete[hidden],#ffb-image-details[hidden]{display:none!important}
+#ffb-dialog{position:fixed;inset:0;z-index:9999;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.ffb-scrim{position:absolute;inset:0;background:rgba(15,28,52,.57)}
+.ffb-sheet{
+ position:absolute;inset:5% 3% 4%;
+ background:#fff;border-radius:16px;
+ padding:12px 12px 20px;overflow-y:auto;
+ box-shadow:0 12px 42px #0e264d66;
+ color:#203755;overscroll-behavior:contain;
+}
+.ffb-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.ffb-head strong{font-size:18px}
+.ffb-sheet button{border:1px solid #aebfdd;background:#eef3fc;color:#1e3968;border-radius:9px;padding:7px 10px;min-height:37px;font-size:13px;touch-action:manipulation}
+.ffb-sheet button:disabled{opacity:.48}
+#ffb-status{font-size:12px;line-height:1.5;color:#536b86}
+#ffb-image-details{border:1px solid #d0dbeb;border-radius:8px;padding:4px 9px;margin:6px 0;font-size:12px}
+#ffb-image-details img{display:block;width:100%;height:auto;max-height:210px;object-fit:contain;margin-top:7px}
+.ffb-hands{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.ffb-seat{min-width:0;border:1px solid #cad6ea;border-radius:11px;padding:6px 7px;margin:0}
+.ffb-seat legend{font-weight:750;color:#284573;padding:0 4px;font-size:14px}
+.ffb-suit-row{display:flex;align-items:center;gap:4px;margin:4px 0}
+.ffb-glyph{font-size:19px;color:#151923;flex:0 0 20px}
+.ffb-glyph.red{color:#d52e28}
+.ffb-suit-row input{
+ display:block;min-width:0;flex:1;
+ background:#f7f9fe;border:1px solid #b9cbe4;border-radius:5px;
+ font:600 15px/1.3 -apple-system,BlinkMacSystemFont,sans-serif;
+ color:#1b2d4a;padding:5px 3px;
+}
+.ffb-validation{font-size:12px;line-height:1.6;border-radius:9px;padding:9px;margin:10px 0}
+.ffb-validation.good{color:#17623b;background:#e4f5e8}
+.ffb-validation.warn{color:#7c4b17;background:#fff3e4}
+.ffb-buttons{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+#ffb-apply{background:#304a94;color:white;font-weight:750;flex:1}
+.ffb-privacy{color:#69809b;font-size:11px;line-height:1.45}
+@media(max-width:360px){
+ .ffb-sheet{inset:3% 2% 2%;padding:10px}
+ .ffb-suit-row input{font-size:13px}
+ .ffb-seat{padding:5px}
+}
+@media (max-width:650px){
+ #ffb-select{min-height:29px!important;height:29px!important;margin:2px 1px!important;padding:3px 6px!important;font-size:11px!important;border-radius:7px!important}
+}
