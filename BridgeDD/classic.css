@@ -1,5 +1,6 @@
 /* Bridge DD : diagramme compact traditionnel pour téléphone.
    Chaque valeur reste un bouton DDS jouable, visuellement sans cadre. */
+.bridge-compass{display:none!important}
 @media (max-width:650px){
  html,body{width:100%;max-width:100%;overflow-x:hidden}
  body{padding-bottom:8px!important;background:#fbfcfe!important}
@@ -102,7 +103,7 @@
  }
  #deck-status{display:none!important}
  .bridge-compass{
-   position:relative;flex:none;width:58px;height:58px;max-width:100%;
+   display:block!important;position:relative;flex:none;width:58px;height:58px;max-width:100%;
    background:#00821b;color:#fff;pointer-events:none;
    font:600 12px/1 Arial,sans-serif;
  }
