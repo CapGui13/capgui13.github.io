@@ -1,0 +1,64 @@
+/* Tableau Bridgemate : résultat DDS par déclarant et couleur. */
+#bridge-dd-panel[hidden]{display:none!important}
+#bridge-dd-panel{
+ position:fixed;inset:0;z-index:9950;
+ font:inherit;color:#1c2c49;
+}
+.bridge-dd-scrim{position:absolute;inset:0;background:rgba(19,29,48,.67)}
+.bridge-dd-dialog{
+ position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+ width:min(95vw,510px);max-height:calc(100dvh - 32px);
+ overflow-y:auto;background:#fff;border-radius:18px;
+ padding:17px;box-shadow:0 15px 50px #10192f55;
+}
+.bridge-dd-heading{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.bridge-dd-heading h2{margin:0;font-size:23px;color:#20365b}
+#bridge-dd-close{
+ width:40px;height:40px;min-width:40px;
+ border:1px solid #d0d9e8;border-radius:10px;
+ background:#eef3fb;color:#243b65;
+ font-size:20px;cursor:pointer;
+}
+.bridge-dd-subtitle{color:#69809b;font-size:12px;margin:5px 0 12px}
+.bridge-dd-status{font-size:14px;font-weight:650;color:#294c8b;min-height:8px}
+.bridge-dd-matrix{
+ border:1px solid #a9bdd7;border-collapse:separate;border-spacing:0;
+ width:100%;table-layout:fixed;border-radius:10px;overflow:hidden;
+ font-variant-numeric:tabular-nums;
+}
+.bridge-dd-matrix caption{
+ caption-side:top;text-align:left;font-size:12px;
+ font-weight:650;color:#466083;padding:0 0 7px;
+}
+.bridge-dd-matrix th,.bridge-dd-matrix td{
+ border-right:1px solid #c8d5e6;border-bottom:1px solid #c8d5e6;
+ text-align:center;padding:12px 2px;
+ font-size:17px;font-weight:750;
+}
+.bridge-dd-matrix tr>*:last-child{border-right:0}
+.bridge-dd-matrix tr:last-child>*{border-bottom:0}
+.bridge-dd-matrix thead th{background:#e8eff9;color:#162d52}
+.bridge-dd-matrix thead th.red{color:#d22a24}
+.bridge-dd-matrix tbody th{
+ text-align:left;padding:10px 5px;
+ width:19%;font-size:12px;background:#f2f6fc;color:#284571;
+}
+.bridge-dd-make{background:#f8fbff;color:#152d50}
+.bridge-dd-down{background:#f6f7fa;color:#a6b0bf;font-weight:500!important}
+.bridge-dd-explanation,.bridge-dd-note{
+ font-size:12px;line-height:1.55;color:#526b88;margin:12px 0 0;
+}
+.bridge-dd-note{font-size:11px;color:#7b8a9e}
+.bridge-dd-switches{display:flex;justify-content:flex-end;margin-top:12px}
+#bridge-dd-format{
+ border:1px solid #b9c9df;border-radius:9px;
+ background:#eaf0fa;color:#28426d;
+ padding:8px 12px;font-size:13px;cursor:pointer;
+}
+#bridge-dd-format:disabled{opacity:.4}
+body.bridge-dd-open{overflow:hidden}
+@media(max-width:375px){
+ .bridge-dd-dialog{padding:12px}
+ .bridge-dd-matrix th,.bridge-dd-matrix td{font-size:15px;padding:10px 1px}
+ .bridge-dd-matrix tbody th{font-size:11px}
+}

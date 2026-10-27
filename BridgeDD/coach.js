@@ -209,6 +209,7 @@
       <div class="bridge-playing-top">
         <strong id="bridge-playing-contract">Contrat en cours</strong>
         <div class="bridge-playing-buttons">
+          <button id="bridge-dd-open" type="button" aria-haspopup="dialog" aria-controls="bridge-dd-panel">Double dummy</button>
           <button id="bridge-newphoto" type="button">Nouvelle donne</button>
           <button id="bridge-change-contract" type="button">Changer contrat</button>
           <button id="coach-undo" type="button" disabled>↶ Annuler</button>
