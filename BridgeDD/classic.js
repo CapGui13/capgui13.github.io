@@ -29,7 +29,7 @@ function fit(){
    let size=18;
    for(const el of holders)el.style.setProperty("--bridge-pip-font",size+"px");
    const fits=()=>holders.every(el=>el.scrollWidth<=el.clientWidth+1);
-   while(size>8&& !fits()){
+   while(size>6&& !fits()){
      size-=0.5;
      for(const el of holders)el.style.setProperty("--bridge-pip-font",size+"px");
    }
