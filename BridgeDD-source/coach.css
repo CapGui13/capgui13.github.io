@@ -161,3 +161,11 @@ body.bridge-wizard[data-bridge-stage="play"] #coach-progress{
 body.bridge-wizard #result-table,
 body.bridge-wizard .result-table-hint,
 body.bridge-wizard #deck-status{display:none!important}
+
+/* Application ajoutée à l'écran d'accueil iOS : marges d'encoche/home bar. */
+@media (display-mode: standalone) {
+ body{
+  padding-top:env(safe-area-inset-top,0px)!important;
+  padding-bottom:max(12px,env(safe-area-inset-bottom,0px))!important;
+ }
+}
