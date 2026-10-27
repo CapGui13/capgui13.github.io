@@ -28,7 +28,7 @@ jobs:
             curl --fail --location --retry 3 --silent --show-error "https://dds-bridge.github.io/dds/$f" -o "BridgeDD/$f"
             test -s "BridgeDD/$f"
           done
-          cp BridgeDD-source/coach.js BridgeDD-source/coach.css BridgeDD-source/classic.css BridgeDD-source/classic.js BridgeDD-source/ffb_parse.js BridgeDD-source/ffb_fast.js BridgeDD-source/ffb_import.js BridgeDD-source/ffb_import.css BridgeDD-source/coach_rules.js BridgeDD-source/manifest.webmanifest BridgeDD-source/icon.svg BridgeDD/
+          cp BridgeDD-source/coach.js BridgeDD-source/coach.css BridgeDD-source/classic.css BridgeDD-source/classic.js BridgeDD-source/ffb_parse.js BridgeDD-source/ffb_fast.js BridgeDD-source/ffb_import.js BridgeDD-source/ffb_import.css BridgeDD-source/coach_rules.js BridgeDD-source/dd_matrix.js BridgeDD-source/dd_matrix.css BridgeDD-source/manifest.webmanifest BridgeDD-source/icon.svg BridgeDD/
           # Motorisation OCR FFB entièrement hébergée par le même site.
           npm install --prefix /tmp/bridge-ocr --no-audit --no-fund --no-save --silent tesseract.js@5.1.1 tesseract.js-core@5.0.0
           mkdir -p BridgeDD/ocr/core BridgeDD/ocr/lang
@@ -47,11 +47,13 @@ jobs:
           assert '</head>' in html and '</body>' in html
           html=html.replace('<html lang="en">','<html lang="fr">')
           html=html.replace('<title>DDS Web — Double Dummy Solver</title>', '<title>Bridge DD · Jeu interactif</title>')
-          html=html.replace('</head>','<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n<meta name="theme-color" content="#304a94">\n<link rel="manifest" href="manifest.webmanifest">\n<link rel="stylesheet" href="coach.css?v=wizard-v17b">\n<link rel="stylesheet" href="classic.css?v=geometry-v18">\n<link rel="stylesheet" href="ffb_import.css?v=ffb-v3">\n</head>')
-          html=html.replace('</body>','<script src="coach_rules.js?v=optimal-v14"></script>\n<script src="coach.js?v=wizard-v17b"></script>\n<script src="classic.js?v=geometry-v18"></script>\n<script src="ffb_parse.js?v=ffb-v3"></script>\n<script src="ffb_fast.js?v=ffb-v3"></script>\n<script src="ffb_import.js?v=wizard-v17"></script>\n\n</body>')
+          html=html.replace('</head>','<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n<meta name="theme-color" content="#304a94">\n<link rel="manifest" href="manifest.webmanifest">\n<link rel="stylesheet" href="coach.css?v=wizard-v17b">\n<link rel="stylesheet" href="classic.css?v=geometry-v18">\n<link rel="stylesheet" href="ffb_import.css?v=ffb-v3">\n<link rel="stylesheet" href="dd_matrix.css?v=bridgemate-v1">\n</head>')
+          html=html.replace('</body>','<script src="coach_rules.js?v=optimal-v14"></script>\n<script src="coach.js?v=bridgemate-v19"></script>\n<script src="classic.js?v=geometry-v18"></script>\n<script src="ffb_parse.js?v=ffb-v3"></script>\n<script src="ffb_fast.js?v=ffb-v3"></script>\n<script src="ffb_import.js?v=wizard-v17"></script>\n<script src="dd_matrix.js?v=bridgemate-v1"></script>\n\n</body>')
           Path("BridgeDD/index.html").write_text(html)
           PY
           node --check BridgeDD/coach.js
+          node --check BridgeDD/dd_matrix.js
+          node --test BridgeDD-source/dd_matrix_test.cjs
           node BridgeDD-source/wizard_test.cjs
           node --check BridgeDD/classic.js
           node --test BridgeDD-source/layout_test.cjs
