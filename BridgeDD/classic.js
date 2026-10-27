@@ -20,14 +20,19 @@ function compass(){
 }
 function fit(){
  if(!window.matchMedia("(max-width:650px)").matches)return;
- for(const seat of seats)for(const suit of suits){
-   const el=document.getElementById(seat+"_"+suit+"_cards");
-   if(!el)continue;
-   el.style.setProperty("--bridge-pip-font","18px");
-   const available=el.clientWidth,needed=el.scrollWidth;
-   if(!(available>0&&needed>available))continue;
-   const size=Math.max(10,Math.min(18,18*(available-2)/needed));
-   el.style.setProperty("--bridge-pip-font",size.toFixed(2)+"px");
+ // Uniform spacing on every suit. Shrink only the font when a long suit
+ // needs more room; never change the inter-card gap or hide a card.
+ for(const seat of seats){
+   const holders=suits.map(suit=>document.getElementById(seat+"_"+suit+"_cards")).filter(Boolean);
+   if(!holders.length)continue;
+   // Same font size for all four suits of one hand keeps rows aligned.
+   let size=18;
+   for(const el of holders)el.style.setProperty("--bridge-pip-font",size+"px");
+   const fits=()=>holders.every(el=>el.scrollWidth<=el.clientWidth+1);
+   while(size>8&& !fits()){
+     size-=0.5;
+     for(const el of holders)el.style.setProperty("--bridge-pip-font",size+"px");
+   }
  }
 }
 function schedule(){
