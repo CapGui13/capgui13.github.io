@@ -231,7 +231,11 @@ async function readFFB(source,headers){
 }
 async function handleFile(file) {
  if(!file||busy)return;
+ // Ne jamais conserver les cartes de la précédente photo pendant la lecture.
+ hands=P.empty();
+ let importAutomatically=false;
  setBusy(true);showDialog();
+ repaintForm();
  setStatus("Analyse du screenshot FFB…");
  try {
   if(!file.type.startsWith("image/"))throw new Error("Choisis une image depuis Photos.");
@@ -248,11 +252,25 @@ async function handleFile(file) {
   $("ffb-image-details").hidden=false;
   hands=await readFFB(canvas,headers);
   repaintForm();
-  setStatus("Reconnaissance terminée. Corrige les éventuelles erreurs avant de charger la donne.");
+  // Une donne strictement complète (13 par main, 52 cartes différentes,
+  // sans caractère inconnu) se charge sans confirmation supplémentaire.
+  // Dans tous les autres cas, conserver l'écran de correction.
+  importAutomatically=P.validate(hands).complete;
+  if(!importAutomatically){
+   setStatus("Reconnaissance partielle : corrige les cartes avant de charger la donne.");
+  }
  }catch(err){
   setStatus("Reconnaissance impossible : "+(err?.message||"erreur inconnue")+". Tu peux choisir une autre capture.");
  }finally{
   setBusy(false);updateValidation();
+ }
+ if(importAutomatically){
+  try{
+   applyDeal();
+  }catch(err){
+   showDialog();
+   setStatus("Chargement impossible : "+(err?.message||"erreur inconnue")+". La donne reste disponible pour vérification.");
+  }
  }
 }
 function applyDeal(){
