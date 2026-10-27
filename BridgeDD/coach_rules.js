@@ -4,11 +4,11 @@
   function sameSide(a,b) {
     return (a==="north"||a==="south")===(b==="north"||b==="south");
   }
-  function evaluateChoice(map,card,seat,declarer) {
+  function evaluateChoice(map,card,seat,declarer,absoluteSideTricks=false) {
     if(!map || !Object.prototype.hasOwnProperty.call(map,card))return null;
     const vals=Object.values(map).filter(Number.isFinite);
     if(!vals.length)return null;
-    const max=sameSide(seat,declarer);
+    const max=absoluteSideTricks||sameSide(seat,declarer);
     const best=max?Math.max(...vals):Math.min(...vals);
     const value=map[card];
     if(!Number.isFinite(value))return null;

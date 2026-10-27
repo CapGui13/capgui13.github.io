@@ -27,3 +27,41 @@ body>button,body>#sample-deals{margin:5px 3px!important;min-height:40px;height:a
 .hand-card{touch-action:manipulation;cursor:pointer}
 .hand-card-playable{outline:1px solid #456fb9;outline-offset:0}
 .coach-training .hand-card-tricks,.coach-training #result-table{display:none!important}
+
+/* V14 — Affichage des coups à la Bridge Composer.
+   Les couleurs sont appliquées exclusivement à la valeur des coups légaux. */
+#coach-color-legend[hidden]{display:none!important}
+.coach-color-legend {
+ display:flex;align-items:center;gap:11px;flex-wrap:wrap;
+ margin:3px 0 5px;font-size:12px;color:#687992;line-height:1.2;
+}
+.bridge-key-green{color:#13833c;font-weight:700}
+.bridge-key-black{color:#101010;font-weight:700}
+#coach-color-progress{color:#62728b;font-weight:500}
+body.playing.coach-analysis .hand-card.hand-card-playable.bridge-optimal {
+ color:#128039!important;
+ font-weight:800!important;
+ -webkit-text-fill-color:#128039!important;
+}
+body.playing.coach-analysis .hand-card.hand-card-playable.bridge-nonoptimal {
+ color:#101010!important;
+ font-weight:600!important;
+ -webkit-text-fill-color:#101010!important;
+}
+body.playing.coach-analysis .hand-card-tricks{display:none!important}
+@media(max-width:650px){
+ #coach-color-legend{font-size:10px;gap:8px;margin:2px 1px}
+ #coach-color-progress{display:none}
+ body.playing.coach-analysis .grid-item .hand-holding>.hand-card.hand-card-playable{
+   border-bottom:0!important;
+   background:transparent!important;
+ }
+ body.playing.coach-analysis .grid-item .hand-holding>.hand-card.hand-card-playable.bridge-optimal{
+   color:#128039!important;-webkit-text-fill-color:#128039!important;
+   font-weight:800!important;
+ }
+ body.playing.coach-analysis .grid-item .hand-holding>.hand-card.hand-card-playable.bridge-nonoptimal{
+   color:#101010!important;-webkit-text-fill-color:#101010!important;
+   font-weight:600!important;
+ }
+}
