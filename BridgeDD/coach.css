@@ -76,3 +76,83 @@ body.playing.coach-analysis .hand-card-tricks{display:none!important}
  #coach-color-legend{font-size:10px;gap:8px;margin:2px 1px}
  #coach-color-progress{display:none}
 }
+
+/* V17 — parcours guidé photo → contrat → jeu (mode analyse unique). */
+body.bridge-wizard[data-bridge-stage="photo"]>:not(#coach-toolbar):not(#ffb-dialog):not(script):not(style),
+body.bridge-wizard[data-bridge-stage="contract"]>:not(#coach-toolbar):not(#ffb-dialog):not(script):not(style){
+ display:none!important;
+}
+body.bridge-wizard[data-bridge-stage="play"]>button,
+body.bridge-wizard[data-bridge-stage="play"]>select,
+body.bridge-wizard[data-bridge-stage="play"]>input,
+body.bridge-wizard[data-bridge-stage="play"]>.deal-entry-hint,
+body.bridge-wizard[data-bridge-stage="play"]>#play-bar,
+body.bridge-wizard[data-bridge-stage="play"]>#play-hint,
+body.bridge-wizard[data-bridge-stage="play"]>br{
+ display:none!important;
+}
+#bridge-step-photo[hidden],#bridge-step-contract[hidden],#bridge-step-play[hidden],
+#bridge-contract-error[hidden]{display:none!important}
+body.bridge-wizard[data-bridge-stage="photo"],
+body.bridge-wizard[data-bridge-stage="contract"]{
+ min-height:100vh;background:#f5f7fc!important;
+}
+body.bridge-wizard[data-bridge-stage="photo"] #coach-toolbar,
+body.bridge-wizard[data-bridge-stage="contract"] #coach-toolbar{
+ max-width:520px;margin:clamp(14px,8vh,85px) auto;
+ border:1px solid #d4deed;border-radius:18px;
+ padding:24px!important;box-shadow:0 8px 35px #16284313!important;
+}
+.bridge-wizard-step h2{font-size:22px;margin:14px 0 9px;color:#1d3052}
+.bridge-wizard-step p{font-size:14px;color:#576c89;line-height:1.55}
+#bridge-upload,#coach-start{
+ display:block;width:100%;min-height:54px!important;
+ margin:18px 0 10px;background:#304a94!important;
+ color:white!important;border:0!important;border-radius:12px!important;
+ font-size:17px!important;font-weight:750!important;
+ cursor:pointer;
+}
+#bridge-contract-newphoto{
+ display:block;width:100%;border:0!important;background:transparent!important;
+ color:#405f96!important;text-decoration:underline;
+ padding:9px!important;margin-top:9px;cursor:pointer;
+}
+.bridge-wizard-note{font-size:12px!important}
+.bridge-confirmed{color:#16884a!important;font-weight:700}
+#bridge-contract-fields{
+ display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+ gap:12px;margin:16px 0;
+}
+#bridge-contract-fields label{font-size:13px}
+#bridge-contract-fields select{
+ width:100%;font-size:17px;min-height:45px;
+}
+.bridge-error{color:#9b2d23!important}
+.bridge-playing-top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+#bridge-playing-contract{color:#26426f;font-size:17px}
+.bridge-playing-buttons{display:flex;gap:6px;flex-wrap:wrap}
+#coach-toolbar .bridge-playing-buttons>button{
+ min-height:34px;padding:6px 9px;font-size:12px;border-radius:8px;
+}
+body.bridge-wizard[data-bridge-stage="play"] #coach-toolbar{
+ padding:9px 12px!important;
+}
+body.bridge-wizard[data-bridge-stage="play"] #coach-step,
+body.bridge-wizard[data-bridge-stage="play"] #coach-progress{
+ display:none!important;
+}
+@media(max-width:650px){
+ body.bridge-wizard[data-bridge-stage="photo"] #coach-toolbar,
+ body.bridge-wizard[data-bridge-stage="contract"] #coach-toolbar{
+  margin:16px 12px;padding:20px!important;
+ }
+ .bridge-wizard-step h2{font-size:20px}
+ #bridge-contract-fields{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+ #bridge-contract-fields label{font-size:11px}
+ #bridge-contract-fields select{font-size:15px;min-height:42px;height:42px}
+ .bridge-playing-top{gap:5px}
+ #bridge-playing-contract{font-size:15px}
+ .bridge-playing-buttons{gap:4px}
+ #coach-toolbar .bridge-playing-buttons>button{min-height:30px;height:30px;font-size:10px;padding:3px 5px}
+ body.bridge-wizard[data-bridge-stage="play"] #coach-toolbar{padding:5px 7px!important}
+}
