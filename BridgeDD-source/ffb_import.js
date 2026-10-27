@@ -167,8 +167,8 @@ async function readFFB(source,headers){
   specialized=null;
  }
  const specializedCheck=specialized?P.validate(specialized.hands):null;
- if(specialized&&specialized.uncertain===0&&specializedCheck?.complete){
-  setStatus("Reconnaissance FFB validée : 52 cartes distinctes.");
+ if(specialized&&specialized.uncertain<=3&&specializedCheck?.complete){
+  setStatus("52 cartes reconnues : vérifie le diagramme avant de charger.");
   return specialized.hands;
  }
  setStatus("Deuxième lecture des cartes pour vérifier les cas difficiles…");
