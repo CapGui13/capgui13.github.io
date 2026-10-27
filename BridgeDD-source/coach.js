@@ -6,7 +6,7 @@
   const suits={S:"♠",H:"♥",D:"♦",C:"♣",N:"SA"};
   const honors={A:"A",K:"R",Q:"D",J:"V",T:"10"};
   const cardName=key=>(honors[key?.[1]]||key?.[1]||"")+(suits[key?.[0]]||"");
-  let mode="training",reveal=false;
+  let mode="analysis",reveal=false;
   const history=[];
 
   // Traduction visuelle des figures seulement : DDS conserve ses codes K/Q/J/T.
@@ -41,6 +41,42 @@
     const status=$("trick-status");
     if(status)status.setAttribute("aria-label","Pli en cours");
   }
+  // Mark only currently legal plays, and only after DDS has returned
+  // its live per-card solution. Non-playable cards are never scored.
+  function paintOptimalCards(state){
+    const active=!!state&&(mode==="analysis"||reveal);
+    const diffs=active?state.pendingDiffs:null;
+    let graded=0,good=0;
+    for(const el of document.querySelectorAll(".hand-card[data-card]")){
+      el.classList.remove("bridge-optimal","bridge-nonoptimal");
+      el.removeAttribute("data-dd-evaluation");
+      if(!diffs||!el.classList.contains("hand-card-playable"))continue;
+      const key=el.dataset.card,seat=el.dataset.direction;
+      if(!Object.prototype.hasOwnProperty.call(diffs,key))continue;
+      // DDS scores are projected from the declarer's side for full deals:
+      // declaring side maximizes; defending side minimizes.
+      const evaluation=window.BridgeCoachRules?.evaluateChoice(
+        diffs,key,seat,state.declarer,!!state.absoluteSideTricks);
+      if(!evaluation)continue;
+      const optimal=evaluation.optimal;
+      el.classList.add(optimal?"bridge-optimal":"bridge-nonoptimal");
+      el.dataset.ddEvaluation=optimal?"optimal":"nonoptimal";
+      el.setAttribute("aria-label",
+        "Carte "+cardName(key)+" ("+(seats[seat]||seat)+") : "+
+        (optimal?"optimale":"non optimale, "+evaluation.loss+
+          " levée"+(evaluation.loss>1?"s":"")+" perdue"+(evaluation.loss>1?"s":"")));
+      graded++;
+      if(optimal)good++;
+    }
+    const legend=$("coach-color-legend");
+    if(legend){
+      legend.hidden=!active;
+      const pending=$("coach-color-progress");
+      if(pending)pending.textContent=graded
+        ? (good+" carte"+(good>1?"s":"")+" optimale"+(good>1?"s":""))
+        : "Calcul DDS en cours…";
+    }
+  }
   function verdict(text,kind="neutral"){
     const el=$("coach-verdict");
     if(!el)return;
@@ -63,6 +99,7 @@
     $("coach-progress").textContent=history.length
       ? "Coups analysés : "+history.length+" · Optimaux : "+history.filter(v=>v.loss===0).length
       :"Le verdict apparaîtra après chaque carte.";
+    paintOptimalCards(state);
     // Never leak the forthcoming solution to screen readers in training mode.
     if(mode==="training"&&!reveal){
       document.querySelectorAll(".hand-card[data-card]").forEach(el=>{
@@ -80,7 +117,7 @@
       const success=start(...args);
       if(success){
         history.length=0;reveal=false;window.playState.autoPlay=false;
-        verdict("À toi ! Joue une carte. Les meilleures réponses sont cachées.","neutral");
+        verdict(mode==="analysis"?"Analyse DDS : les meilleures cartes apparaissent en vert.":"À toi ! Joue une carte. Les meilleures réponses sont cachées.","neutral");
         update();
       }
       return success;
@@ -130,6 +167,11 @@
       <button id="coach-mode" type="button">Mode entraînement</button>
       <button id="coach-reveal" type="button">Voir les indices</button>
       <button id="coach-undo" type="button" disabled>↶ Annuler</button>
+    </div>
+    <div id="coach-color-legend" class="coach-color-legend" hidden aria-live="polite">
+      <span class="bridge-key-green">Vert : optimal</span>
+      <span class="bridge-key-black">Noir : non optimal</span>
+      <span id="coach-color-progress"></span>
     </div>
     <p id="coach-step" class="coach-hint">Charge une donne puis choisis ton contrat.</p>
     <div id="coach-verdict" class="coach-verdict neutral" aria-live="polite">Pour commencer : « Donne d'exemple… » ou importer un fichier PBN.</div>
