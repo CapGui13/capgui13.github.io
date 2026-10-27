@@ -158,8 +158,28 @@ function workerPath(part){
  return new URL("ocr/"+part,document.baseURI).href.replace(/\/$/,"");
 }
 async function readFFB(source,headers){
- setStatus("Initialisation de la reconnaissance (premier chargement parfois long)…");
- await addScript();
+ // Priorité au lecteur de glyphes FFB : plus rapide et testé sur les
+ // 8 captures reçues. On garde l'OCR généraliste comme repli.
+ let specialized=null;
+ try{
+  specialized=window.BridgeFFBFast?.recognize(source,headers,P)||null;
+ }catch(err){
+  specialized=null;
+ }
+ const specializedCheck=specialized?P.validate(specialized.hands):null;
+ if(specialized&&specialized.uncertain===0&&specializedCheck?.complete){
+  setStatus("Reconnaissance FFB validée : 52 cartes distinctes.");
+  return specialized.hands;
+ }
+ setStatus("Deuxième lecture des cartes pour vérifier les cas difficiles…");
+ try { await addScript(); }
+ catch(err){
+  if(specialized?.readCount===16){
+   setStatus("Lecture partielle : vérifie et complète les cartes.");
+   return specialized.hands;
+  }
+  throw err;
+ }
  if(!window.Tesseract)throw new Error("Moteur de reconnaissance non disponible.");
  let worker=null;
  const newHands=P.empty();
@@ -193,8 +213,21 @@ async function readFFB(source,headers){
     newHands[header.seat][suitOrder[row]]=parsed.value;
    }
   }
+ } catch(err){
+  if(specialized?.readCount===16){
+   setStatus("Reconnaissance partielle : corrige les cartes non reconnues.");
+   return specialized.hands;
+  }
+  throw err;
  } finally {if(worker)await worker.terminate();}
- return newHands;
+ const generic=P.validate(newHands);
+ if(!specialized)return newHands;
+ const fast= specializedCheck;
+ // Ne pas préférer une seconde lecture qui perd des cartes ou introduit
+ // des doublons. Toutes les erreurs restent vérifiables dans le formulaire.
+ const score=v=>(v.complete?200:0)+v.total-6*v.duplicates.length-
+  3*v.unknown.length-Math.max(0,v.missing.length-2);
+ return score(fast)>score(generic)?specialized.hands:newHands;
 }
 async function handleFile(file) {
  if(!file||busy)return;

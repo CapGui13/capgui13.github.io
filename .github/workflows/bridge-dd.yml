@@ -28,7 +28,7 @@ jobs:
             curl --fail --location --retry 3 --silent --show-error "https://dds-bridge.github.io/dds/$f" -o "BridgeDD/$f"
             test -s "BridgeDD/$f"
           done
-          cp BridgeDD-source/coach.js BridgeDD-source/coach.css BridgeDD-source/classic.css BridgeDD-source/classic.js BridgeDD-source/ffb_parse.js BridgeDD-source/ffb_import.js BridgeDD-source/ffb_import.css BridgeDD-source/coach_rules.js BridgeDD-source/manifest.webmanifest BridgeDD-source/icon.svg BridgeDD/
+          cp BridgeDD-source/coach.js BridgeDD-source/coach.css BridgeDD-source/classic.css BridgeDD-source/classic.js BridgeDD-source/ffb_parse.js BridgeDD-source/ffb_fast.js BridgeDD-source/ffb_import.js BridgeDD-source/ffb_import.css BridgeDD-source/coach_rules.js BridgeDD-source/manifest.webmanifest BridgeDD-source/icon.svg BridgeDD/
           # Motorisation OCR FFB entièrement hébergée par le même site.
           npm install --prefix /tmp/bridge-ocr --no-audit --no-fund --no-save --silent tesseract.js@5.1.1 tesseract.js-core@5.0.0
           mkdir -p BridgeDD/ocr/core BridgeDD/ocr/lang
@@ -47,17 +47,19 @@ jobs:
           assert '</head>' in html and '</body>' in html
           html=html.replace('<html lang="en">','<html lang="fr">')
           html=html.replace('<title>DDS Web — Double Dummy Solver</title>', '<title>Bridge DD · Jeu interactif</title>')
-          html=html.replace('</head>','<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n<meta name="theme-color" content="#304a94">\n<link rel="manifest" href="manifest.webmanifest">\n<link rel="stylesheet" href="coach.css?v=classic-v9b">\n<link rel="stylesheet" href="classic.css?v=classic-v9b">\n<link rel="stylesheet" href="ffb_import.css?v=ffb-v2">\n</head>')
-          html=html.replace('</body>','<script src="coach_rules.js"></script>\n<script src="coach.js?v=classic-v9b"></script>\n<script src="classic.js?v=classic-v9b"></script>\n<script src="ffb_parse.js?v=ffb-v2"></script>\n<script src="ffb_import.js?v=ffb-v2"></script>\n\n</body>')
+          html=html.replace('</head>','<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n<meta name="theme-color" content="#304a94">\n<link rel="manifest" href="manifest.webmanifest">\n<link rel="stylesheet" href="coach.css?v=classic-v9b">\n<link rel="stylesheet" href="classic.css?v=classic-v9b">\n<link rel="stylesheet" href="ffb_import.css?v=ffb-v3">\n</head>')
+          html=html.replace('</body>','<script src="coach_rules.js"></script>\n<script src="coach.js?v=classic-v9b"></script>\n<script src="classic.js?v=classic-v9b"></script>\n<script src="ffb_parse.js?v=ffb-v3"></script>\n<script src="ffb_fast.js?v=ffb-v3"></script>\n<script src="ffb_import.js?v=ffb-v3"></script>\n\n</body>')
           Path("BridgeDD/index.html").write_text(html)
           PY
           node --check BridgeDD/coach.js
           node --check BridgeDD/classic.js
           node --check BridgeDD/ffb_parse.js
+          node --check BridgeDD/ffb_fast.js
           node --check BridgeDD/ffb_import.js
           node --test BridgeDD-source/ffb_test.cjs
           grep -q 'classic.css' BridgeDD/index.html
           grep -q 'ffb_import.js' BridgeDD/index.html
+          grep -q 'ffb_fast.js' BridgeDD/index.html
           test -s BridgeDD/ocr/lang/eng.traineddata.gz
           test -s BridgeDD/ocr/tesseract.min.js
           rm -f BridgeDD/coach_keyboard.js
