@@ -133,14 +133,8 @@
               button.setAttribute("aria-label","Carte déjà jouée : "+cardName(button.dataset.card));
             }
           }
-          // Densités adaptées : les rangs courts reçoivent des cibles plus
-          // larges ; les longues couleurs restent intégralement visibles.
-          for(const holder of document.querySelectorAll(".hand-holding")){
-            const number=holder.querySelectorAll(".hand-card").length;
-            holder.classList.toggle("bridge-spacious",number<=5);
-            holder.classList.toggle("bridge-medium",number>5&&number<=8);
-            holder.classList.toggle("bridge-dense",number>8);
-          }
+          // Espacement constant, indépendant de la longueur des couleurs :
+          // la taille des caractères s'ajuste dans classic.js, pas le gap.
         }
         return result;
       };
