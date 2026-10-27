@@ -48,7 +48,7 @@ jobs:
           html=html.replace('<html lang="en">','<html lang="fr">')
           html=html.replace('<title>DDS Web — Double Dummy Solver</title>', '<title>Bridge DD · Jeu interactif</title>')
           html=html.replace('</head>','<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n<meta name="theme-color" content="#304a94">\n<link rel="manifest" href="manifest.webmanifest">\n<link rel="stylesheet" href="coach.css?v=aligned-v16">\n<link rel="stylesheet" href="classic.css?v=aligned-v16">\n<link rel="stylesheet" href="ffb_import.css?v=ffb-v3">\n</head>')
-          html=html.replace('</body>','<script src="coach_rules.js?v=optimal-v14"></script>\n<script src="coach.js?v=played-v15"></script>\n<script src="classic.js?v=aligned-v16"></script>\n<script src="ffb_parse.js?v=ffb-v3"></script>\n<script src="ffb_fast.js?v=ffb-v3"></script>\n<script src="ffb_import.js?v=ffb-v5"></script>\n\n</body>')
+          html=html.replace('</body>','<script src="coach_rules.js?v=optimal-v14"></script>\n<script src="coach.js?v=aligned-v16"></script>\n<script src="classic.js?v=aligned-v16"></script>\n<script src="ffb_parse.js?v=ffb-v3"></script>\n<script src="ffb_fast.js?v=ffb-v3"></script>\n<script src="ffb_import.js?v=ffb-v5"></script>\n\n</body>')
           Path("BridgeDD/index.html").write_text(html)
           PY
           node --check BridgeDD/coach.js

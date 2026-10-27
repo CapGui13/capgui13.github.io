@@ -80,7 +80,7 @@
    cursor:pointer!important;touch-action:manipulation!important;
    -webkit-tap-highlight-color:rgba(48,93,177,.2);
  }
- .grid-item .hand-card:disabled{opacity:.58!important}
+ .grid-item .hand-card:disabled{opacity:1!important}
  .grid-item .hand-card.hand-card-playable{
    color:inherit;
    background:transparent!important;
