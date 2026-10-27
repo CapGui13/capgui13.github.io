@@ -37,3 +37,33 @@ test("Green FFB blocks assign seats by position",()=>{
  const got=p.detectGreenHeaders({width:w,height:h,data});
  assert.deepEqual(got.map(x=>x.seat),["north","west","east","south"]);
 });
+
+test("FFB pink/red screenshot layout is recognized (dealer tile excluded)",()=>{
+ const w=750,h=1334,data=new Uint8ClampedArray(w*h*4);
+ function rect(x,y,width,height,r,g,b){
+  for(let py=y;py<y+height;py++)for(let px=x;px<x+width;px++){
+   const i=(py*w+px)*4;data[i]=r;data[i+1]=g;data[i+2]=b;data[i+3]=255;
+  }
+ }
+ rect(223,52,304,101,255,229,225);
+ rect(32,381,304,101,255,229,225);
+ rect(414,381,304,101,255,229,225);
+ rect(223,710,304,101,255,229,225);
+ rect(32,52,144,144,255,229,225);
+ const seats=p.detectFFBHeaders({width:w,height:h,data});
+ assert.deepEqual(seats.map(x=>x.seat),["north","west","east","south"]);
+ assert.deepEqual(seats.map(x=>[x.x,x.y,x.w,x.h]),[
+  [223,52,304,101],[32,381,304,101],[414,381,304,101],[223,710,304,101]
+ ]);
+});
+test("New FFB red screenshot example has 52 unique cards",()=>{
+ const hands={
+  north:{S:"V1084",H:"94",D:"ADV8",C:"V52"},
+  west:{S:"AR732",H:"RD5",D:"7532",C:"9"},
+  east:{S:"965",H:"1072",D:"R4",C:"D10764"},
+  south:{S:"D",H:"AV863",D:"1096",C:"AR83"}
+ };
+ const v=p.validate(hands);
+ assert.equal(v.complete,true,JSON.stringify(v));
+ assert.deepEqual(v.counts,{north:13,east:13,south:13,west:13});
+});
