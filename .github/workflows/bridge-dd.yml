@@ -42,7 +42,9 @@ jobs:
           html=html.replace('</body>','<script src="coach_rules.js"></script>\n<script src="coach.js?v=classic-v9"></script>\n<script src="classic.js?v=classic-v9"></script>\n\n</body>')
           Path("BridgeDD/index.html").write_text(html)
           PY
-          node --check BridgeDD/coach.js\n          node --check BridgeDD/classic.js\n          grep -q 'classic.css' BridgeDD/index.html
+          node --check BridgeDD/coach.js
+          node --check BridgeDD/classic.js
+          grep -q 'classic.css' BridgeDD/index.html
           rm -f BridgeDD/coach_keyboard.js
           node --check BridgeDD/coach_rules.js
           node --check BridgeDD/dds_web_play.js
