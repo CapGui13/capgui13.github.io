@@ -137,3 +137,42 @@
  .grid-item .hand-holding{gap:0!important}
  .bridge-compass{width:53px;height:53px}
 }
+
+/* V15 : espacement tactile en jeu, adapté à la longueur de chaque couleur.
+   Aucune carte ne passe à la ligne ; le réducteur de police existant reste actif. */
+@media(max-width:650px){
+ body.playing .grid-item .hand-suit{min-height:30px!important}
+ body.playing .grid-item .hand-holding>.hand-card{
+   min-height:30px!important;height:30px!important;
+   border-radius:3px!important;
+ }
+ body.playing .grid-item .hand-holding.bridge-spacious{gap:3px!important}
+ body.playing .grid-item .hand-holding.bridge-spacious>.hand-card{
+   padding:0 4px!important;
+ }
+ body.playing .grid-item .hand-holding.bridge-medium{gap:2px!important}
+ body.playing .grid-item .hand-holding.bridge-medium>.hand-card{
+   padding:0 2px!important;
+ }
+ body.playing .grid-item .hand-holding.bridge-dense{gap:1px!important}
+ body.playing .grid-item .hand-holding.bridge-dense>.hand-card{
+   padding:0 1px!important;
+ }
+ body.playing.coach-analysis .grid-item .hand-holding>.hand-card.bridge-optimal{
+   color:#009a31!important;-webkit-text-fill-color:#009a31!important;
+   font-weight:900!important;background:#dfffea!important;
+   border-bottom:2px solid #00b743!important;
+ }
+ body.playing.coach-analysis .grid-item .hand-holding>.hand-card.bridge-nonoptimal{
+   color:#050505!important;-webkit-text-fill-color:#050505!important;
+   font-weight:600!important;background:transparent!important;
+   border-bottom:0!important;
+ }
+ body.playing .grid-item .hand-holding>.hand-card.bridge-played,
+ body.playing.coach-analysis .grid-item .hand-holding>.hand-card.bridge-played{
+   color:#979eaa!important;-webkit-text-fill-color:#979eaa!important;
+   font-weight:500!important;background:#f0f2f5!important;
+   border-bottom:0!important;box-shadow:none!important;
+   text-decoration:line-through!important;opacity:1!important;
+ }
+}

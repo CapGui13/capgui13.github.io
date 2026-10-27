@@ -36,7 +36,7 @@
     const change=$("edit-hands");
     if(change&&change.textContent!=="Modifier la donne")change.textContent="Modifier la donne";
     const hint=$("play-hint");
-    const french="Touche une carte bleue pour la jouer. Utilise Annuler pour revenir en arrière.";
+    const french="Vert : carte optimale. Noir : autre carte jouable. Les cartes déjà jouées restent grisées.";
     if(hint&&hint.textContent!==french)hint.textContent=french;
     const status=$("trick-status");
     if(status)status.setAttribute("aria-label","Pli en cours");
@@ -113,6 +113,38 @@
       verdict("Le module DDS n'a pas pu être initialisé.","bad");return;
     }
     const start=window.startPlay,play=window.tryPlayCard,undo=window.undoPlay,exit=window.exitPlay,render=window.renderPlayUi;
+    // Le rendu DDS cache normalement les cartes jouées. Le résoudre sans
+    // toucher au solveur : afficher les mains initiales au complet, et griser
+    // uniquement les cartes figurant dans l'historique de la donne.
+    const renderHands=window.updateHandCardDisplays;
+    if(typeof renderHands==="function"){
+      window.updateHandCardDisplays=function(hands){
+        const state=window.playState;
+        const active=!!state&&Array.isArray(state.history)&&state.hands;
+        const result=renderHands(active?state.hands:hands);
+        if(active){
+          const played=new Set(state.history.map(p=>p.seat+":"+p.key));
+          for(const button of document.querySelectorAll(".hand-card[data-card]")){
+            const key=button.dataset.direction+":"+button.dataset.card;
+            const used=played.has(key);
+            button.classList.toggle("bridge-played",used);
+            if(used){
+              button.disabled=true;
+              button.setAttribute("aria-label","Carte déjà jouée : "+cardName(button.dataset.card));
+            }
+          }
+          // Densités adaptées : les rangs courts reçoivent des cibles plus
+          // larges ; les longues couleurs restent intégralement visibles.
+          for(const holder of document.querySelectorAll(".hand-holding")){
+            const number=holder.querySelectorAll(".hand-card").length;
+            holder.classList.toggle("bridge-spacious",number<=5);
+            holder.classList.toggle("bridge-medium",number>5&&number<=8);
+            holder.classList.toggle("bridge-dense",number>8);
+          }
+        }
+        return result;
+      };
+    }
     window.startPlay=function(...args) {
       const success=start(...args);
       if(success){

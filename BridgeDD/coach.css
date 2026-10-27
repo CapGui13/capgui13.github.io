@@ -65,3 +65,30 @@ body.playing.coach-analysis .hand-card-tricks{display:none!important}
    font-weight:600!important;
  }
 }
+
+/* V15 : code couleur fortement différencié, comme Bridge Composer.
+   Le vert est accompagné d'un fond très léger pour rester identifiable. */
+.bridge-key-green{color:#00a63a!important;font-weight:900!important}
+.bridge-key-black{color:#050505!important;font-weight:750!important}
+body.playing.coach-analysis .hand-card.hand-card-playable.bridge-optimal{
+  color:#009a31!important;-webkit-text-fill-color:#009a31!important;
+  font-weight:900!important;
+  background:#dfffea!important;
+  border-bottom:2px solid #00b743!important;
+}
+body.playing.coach-analysis .hand-card.hand-card-playable.bridge-nonoptimal{
+  color:#050505!important;-webkit-text-fill-color:#050505!important;
+  font-weight:600!important;
+  background:transparent!important;border-bottom:0!important;
+}
+/* Le gris d'une carte jouée l'emporte sur toute indication DDS. */
+body.playing .hand-holding>.hand-card.bridge-played,
+body.playing.coach-analysis .hand-holding>.hand-card.bridge-played{
+  color:#979eaa!important;-webkit-text-fill-color:#979eaa!important;
+  background:#f0f2f5!important;
+  box-shadow:none!important;
+  text-decoration:line-through!important;
+  border-bottom:0!important;
+  opacity:1!important;
+  cursor:default!important;
+}
