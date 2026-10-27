@@ -115,7 +115,35 @@ function cropCanvas(image,rect) {
  ctx.fillStyle="white";ctx.fillRect(0,0,canvas.width,canvas.height);
  ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality="high";
  ctx.drawImage(image,rect.x,rect.y,rect.w,rect.h,0,0,canvas.width,canvas.height);
+ restoreBlueBadgeDigit(canvas);
  return canvas;
+}
+/* FFB overlays the card just played with a blue disk and white rank.
+   Transform only that disk into white paper with a black digit before OCR.
+   This is local pixel processing; it doesn't infer or invent a card. */
+function restoreBlueBadgeDigit(canvas){
+ const ctx=canvas.getContext("2d",{willReadFrequently:true});
+ const image=ctx.getImageData(0,0,canvas.width,canvas.height);
+ const {data,width:w,height:h}=image;
+ let x0=w,y0=h,x1=-1,y1=-1,count=0;
+ for(let y=0;y<h;y++)for(let x=0;x<w;x++){
+  const i=(y*w+x)*4,r=data[i],g=data[i+1],b=data[i+2];
+  if(b>140&&b>r*1.7&&b>g*1.17&&g<180){
+   if(x<x0)x0=x;if(x>x1)x1=x;
+   if(y<y0)y0=y;if(y>y1)y1=y;count++;
+  }
+ }
+ const bw=x1-x0+1,bh=y1-y0+1;
+ if(count<90||bw<h*.3||bh<h*.3||bw>h*1.55||bh>h*1.55||Math.abs(bw-bh)>h*.2)return;
+ const cx=(x0+x1)/2,cy=(y0+y1)/2,radius=Math.max(bw,bh)/2;
+ for(let y=y0;y<=y1;y++)for(let x=x0;x<=x1;x++){
+  const i=(y*w+x)*4,r=data[i],g=data[i+1],b=data[i+2];
+  const inside=Math.hypot(x-cx,y-cy)<radius*.72;
+  const isLetter=inside && r>205 && g>205 && b>205;
+  data[i]=data[i+1]=data[i+2]=isLetter?0:255;
+  data[i+3]=255;
+ }
+ ctx.putImageData(image,0,0);
 }
 function addScript(){
  if(window.Tesseract)return Promise.resolve();
@@ -177,9 +205,9 @@ async function handleFile(file) {
   const image=await loadImage(file);
   const canvas=baseCanvas(image),ctx=canvas.getContext("2d",{willReadFrequently:true});
   const pixels=ctx.getImageData(0,0,canvas.width,canvas.height);
-  const headers=P.detectGreenHeaders(pixels);
+  const headers=P.detectFFBHeaders(pixels);
   if(headers.length!==4){
-   throw new Error("Les quatre bandeaux verts FFB n'ont pas été trouvés. Essaie une capture complète de la donne, comme ton exemple.");
+   throw new Error("Les quatre bandeaux de joueurs FFB (verts ou roses) n'ont pas été trouvés. Essaie une capture complète de la donne, comme ton exemple.");
   }
   if(imageUrl)URL.revokeObjectURL(imageUrl);
   imageUrl=URL.createObjectURL(file);
