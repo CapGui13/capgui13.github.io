@@ -25,70 +25,54 @@ body>button,body>#sample-deals{margin:5px 3px!important;min-height:40px;height:a
 .grid-outer{max-width:980px!important;width:calc(100% - 12px);margin:9px auto!important;border:1px solid #bdcde6;border-radius:12px!important;background:#dce8f5!important;padding:6px!important}
 .grid-container{background:transparent!important}
 .hand-card{touch-action:manipulation;cursor:pointer}
-.hand-card-playable{outline:1px solid #456fb9;outline-offset:0}
+.hand-card-playable{outline:0!important;outline-offset:0}
 .coach-training .hand-card-tricks,.coach-training #result-table{display:none!important}
 
-/* V14 — Affichage des coups à la Bridge Composer.
-   Les couleurs sont appliquées exclusivement à la valeur des coups légaux. */
+/* V16 : aucune bordure/fond/case autour des cartes, sur PC comme sur mobile.
+   Optimal en vert vif, non optimal en noir, déjà jouée en gris. */
 #coach-color-legend[hidden]{display:none!important}
-.coach-color-legend {
+.coach-color-legend{
  display:flex;align-items:center;gap:11px;flex-wrap:wrap;
  margin:3px 0 5px;font-size:12px;color:#687992;line-height:1.2;
 }
-.bridge-key-green{color:#13833c;font-weight:700}
-.bridge-key-black{color:#101010;font-weight:700}
+.bridge-key-green{color:#00ad39;font-weight:900}
+.bridge-key-black{color:#050505;font-weight:750}
 #coach-color-progress{color:#62728b;font-weight:500}
-body.playing.coach-analysis .hand-card.hand-card-playable.bridge-optimal {
- color:#128039!important;
- font-weight:800!important;
- -webkit-text-fill-color:#128039!important;
+.grid-item .hand-holding{gap:3px!important}
+.grid-item .hand-holding>.hand-card,
+.grid-item .hand-holding>.hand-card.hand-card-playable,
+.grid-item .hand-holding>.hand-card.hand-card-playable:hover{
+ background:transparent!important;
+ border:0!important;border-radius:0!important;
+ box-shadow:none!important;
+ outline:0!important;
+ text-decoration:none!important;
 }
-body.playing.coach-analysis .hand-card.hand-card-playable.bridge-nonoptimal {
- color:#101010!important;
+.grid-item .hand-holding>.hand-card:focus-visible{
+ outline:0!important;
+ text-decoration:underline!important;
+}
+body.playing.coach-analysis .grid-item .hand-holding>.hand-card.hand-card-playable.bridge-optimal{
+ color:#00ad39!important;-webkit-text-fill-color:#00ad39!important;
+ font-weight:900!important;
+ background:transparent!important;border:0!important;outline:0!important;
+}
+body.playing.coach-analysis .grid-item .hand-holding>.hand-card.hand-card-playable.bridge-nonoptimal{
+ color:#050505!important;-webkit-text-fill-color:#050505!important;
  font-weight:600!important;
- -webkit-text-fill-color:#101010!important;
+ background:transparent!important;border:0!important;outline:0!important;
+}
+body.playing .grid-item .hand-holding>.hand-card.bridge-played,
+body.playing.coach-analysis .grid-item .hand-holding>.hand-card.bridge-played{
+ color:#a0a5ad!important;-webkit-text-fill-color:#a0a5ad!important;
+ opacity:1!important;
+ font-weight:500!important;
+ background:transparent!important;border:0!important;box-shadow:none!important;
+ text-decoration:none!important;
+ cursor:default!important;
 }
 body.playing.coach-analysis .hand-card-tricks{display:none!important}
 @media(max-width:650px){
  #coach-color-legend{font-size:10px;gap:8px;margin:2px 1px}
  #coach-color-progress{display:none}
- body.playing.coach-analysis .grid-item .hand-holding>.hand-card.hand-card-playable{
-   border-bottom:0!important;
-   background:transparent!important;
- }
- body.playing.coach-analysis .grid-item .hand-holding>.hand-card.hand-card-playable.bridge-optimal{
-   color:#128039!important;-webkit-text-fill-color:#128039!important;
-   font-weight:800!important;
- }
- body.playing.coach-analysis .grid-item .hand-holding>.hand-card.hand-card-playable.bridge-nonoptimal{
-   color:#101010!important;-webkit-text-fill-color:#101010!important;
-   font-weight:600!important;
- }
-}
-
-/* V15 : code couleur fortement différencié, comme Bridge Composer.
-   Le vert est accompagné d'un fond très léger pour rester identifiable. */
-.bridge-key-green{color:#00a63a!important;font-weight:900!important}
-.bridge-key-black{color:#050505!important;font-weight:750!important}
-body.playing.coach-analysis .hand-card.hand-card-playable.bridge-optimal{
-  color:#009a31!important;-webkit-text-fill-color:#009a31!important;
-  font-weight:900!important;
-  background:#dfffea!important;
-  border-bottom:2px solid #00b743!important;
-}
-body.playing.coach-analysis .hand-card.hand-card-playable.bridge-nonoptimal{
-  color:#050505!important;-webkit-text-fill-color:#050505!important;
-  font-weight:600!important;
-  background:transparent!important;border-bottom:0!important;
-}
-/* Le gris d'une carte jouée l'emporte sur toute indication DDS. */
-body.playing .hand-holding>.hand-card.bridge-played,
-body.playing.coach-analysis .hand-holding>.hand-card.bridge-played{
-  color:#979eaa!important;-webkit-text-fill-color:#979eaa!important;
-  background:#f0f2f5!important;
-  box-shadow:none!important;
-  text-decoration:line-through!important;
-  border-bottom:0!important;
-  opacity:1!important;
-  cursor:default!important;
 }
