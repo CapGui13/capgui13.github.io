@@ -190,6 +190,7 @@
       <h2>Importer une donne</h2>
       <p>Choisis une capture du diagramme FFB depuis ton téléphone ou ton ordinateur.</p>
       <button id="bridge-upload" type="button" class="coach-primary">📷 Choisir une image</button>
+      <p id="bridge-photo-error" class="bridge-error" hidden role="alert"></p>
       <p class="bridge-wizard-note">Les 52 cartes sont reconnues automatiquement. Tu pourras corriger une erreur si nécessaire.</p>
     </section>
     <section id="bridge-step-contract" class="bridge-wizard-step" hidden>
@@ -229,10 +230,17 @@
       update();
     };
     $("bridge-upload").addEventListener("click",()=>{
-      // L'ouverture de Photos exige un geste de l'utilisateur sur iPhone.
-      const trigger=$("ffb-select");
-      if(trigger)trigger.click();
-      else $("bridge-contract-error").textContent="L'import d'image n'est pas disponible.";
+      // Un seul clic programmatique sur l'input, pendant le geste utilisateur :
+      // compatible avec les restrictions de Safari iPhone pour Photos.
+      const input=$("ffb-file");
+      if(input&&!input.disabled){
+        input.value="";
+        input.click();
+      }else{
+        const error=$("bridge-photo-error");
+        error.textContent="L'import d'image n'est pas encore disponible. Recharge la page.";
+        error.hidden=false;
+      }
     });
     $("bridge-contract-newphoto").addEventListener("click",newPhoto);
     $("bridge-newphoto").addEventListener("click",newPhoto);
