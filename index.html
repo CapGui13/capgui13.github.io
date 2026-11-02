@@ -1,315 +1,223 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="color-scheme" content="dark">
-<meta name="theme-color" content="#0a0b14">
-<title>capgui13 — projets</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --bg:#0a0b14;
-    --ink:#f4f5fb;
-    --muted:#a6acc3;
-    --glass:rgba(255,255,255,.055);
-    --glass-hover:rgba(255,255,255,.085);
-    --line:rgba(255,255,255,.105);
-    --line-hover:rgba(255,255,255,.22);
-    --primary:#8390f7;
-    --teal:#33d6c0;
-    --coral:#ff936f;
-    --radius:20px;
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0d1120"><meta name="description" content="Applications et projets CapGui13"><title>CapGui13 — applications & projets</title><style>
+:root{color-scheme:dark;--bg:#0d1120;--ink:#f5f6fe;--muted:#e7eefc;--border:rgba(255,255,255,.085)}
+*{box-sizing:border-box}
+html,body{width:100%;height:100%;margin:0}
+html{background:var(--bg)}
+body{
+  color:var(--ink);font:400 14px/1.35 system-ui,-apple-system,"Segoe UI",sans-serif;
+  background:
+    radial-gradient(720px 580px at 3% -13%,rgba(100,92,233,.21),transparent 72%),
+    radial-gradient(800px 660px at 103% 102%,rgba(35,142,151,.10),transparent 72%),
+    var(--bg);
+  overflow:hidden;
+}
+.page{width:100%;height:100vh;height:100dvh;display:flex;flex-direction:column;padding:0;margin:0;}
+.mosaic{position:relative;flex:1;min-height:0;width:100%;}
+.app-card{
+  position:absolute;
+  left:var(--left);top:var(--top);
+  width:18.84%;height:7.65vh;height:7.65dvh;
+  min-height:0;min-width:0;
+  display:flex;align-items:stretch;gap:0;
+  border:1px solid var(--border);border-radius:clamp(14px,1.35vw,20px);
+  overflow:hidden;
+  background:linear-gradient(148deg,rgba(255,255,255,.063),rgba(255,255,255,.018));
+  box-shadow:inset 0 1px rgba(255,255,255,.035);
+  color:inherit;text-decoration:none;
+  transition:background .2s,border-color .2s,box-shadow .2s;
+  animation:float-soft 9.5s ease-in-out infinite;
+  animation-delay:var(--delay,0s);
+  --float-x:5.5px;--float-y:4.3px;--badge-width:clamp(82px,5.3vw,100px);
+  user-select:none;-webkit-user-select:none;
+}
+.app-card:nth-child(3n+1){animation-duration:9.1s}
+.app-card:nth-child(3n+2){animation-duration:10.7s}
+.app-card:nth-child(5n+3){animation-duration:8.7s}
+.app-card:nth-child(even){animation-direction:reverse}
+@keyframes float-soft{
+  0%,100%{transform:translate3d(0,0,0)}
+  25%{transform:translate3d(var(--float-x),calc(-1 * var(--float-y)),0)}
+  50%{transform:translate3d(calc(-.5 * var(--float-x)),var(--float-y),0)}
+  75%{transform:translate3d(calc(-1 * var(--float-x)),calc(.25 * var(--float-y)),0)}
+}
+.app-card::before{position:absolute;content:'';right:-35px;bottom:-60px;width:125px;height:125px;background:var(--accent);opacity:.09;filter:blur(30px);border-radius:100%;pointer-events:none}
+/* V14.20 — discret halo coloré projeté sous la carte, pas dans la carte. */
+.app-card:hover:not(.disabled){
+  background:linear-gradient(148deg,rgba(255,255,255,.105),rgba(255,255,255,.035));
+  border-color:color-mix(in srgb,var(--accent) 43%,rgba(255,255,255,.08));
+  box-shadow:
+    inset 0 1px rgba(255,255,255,.045),
+    0 5px 13px rgba(0,0,0,.14),
+    0 0 0 1px color-mix(in srgb,var(--accent) 12%,transparent),
+    0 11px 16px -11px color-mix(in srgb,var(--accent) 34%,transparent),
+    0 18px 22px -16px color-mix(in srgb,var(--accent) 22%,transparent);
+}
+/* Pas de gros halo dans la zone de description au survol. */
+.app-card:hover:not(.disabled)::before{opacity:.09;filter:blur(30px)}
+.app-card::after{content:"";position:absolute;inset:-1px;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity .22s ease, box-shadow .22s ease;box-shadow:0 0 0 1px color-mix(in srgb,var(--accent) 40%,transparent),0 0 18px color-mix(in srgb,var(--accent) 15%,transparent)}
+.app-card:hover:not(.disabled)::after{opacity:1}
+.app-card:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.card-top{height:100%;width:var(--badge-width);max-width:69%;flex:0 0 var(--badge-width);display:flex;align-items:stretch;position:relative;z-index:1}
+.glyph{
+  width:100%;min-width:0;max-width:100%;height:100%;
+  display:inline-flex;justify-content:center;align-items:center;
+  padding:0 clamp(10px,1vw,16px);
+  border-radius:0 clamp(11px,1.18vw,17px) clamp(11px,1.18vw,17px) 0;white-space:nowrap;
+  background:linear-gradient(135deg,var(--badge-a),var(--badge-b));
+  color:#0a0b14;font-size:clamp(13px,1.14vw,19px);font-weight:800;letter-spacing:-.025em;
+  line-height:1.1;filter:brightness(1.00) saturate(1.06);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.28);
+}
+ .long-name .glyph{font-size:clamp(9px,.76vw,12px);padding:0 7px;letter-spacing:-.045em}
+ .medium-name .glyph{font-size:clamp(11px,.94vw,15px);padding:0 8px}
+ .two-line-name .glyph{font-size:clamp(11px,.95vw,16px);white-space:normal;text-align:center;line-height:1.12;padding:0 7px}
+ .app-card[data-name="Bridge DD"] .glyph{font-size:clamp(11px,.88vw,15px);letter-spacing:-.035em;padding:0 5px}
+ .app-card[data-name="PBNDownloader"] .glyph{font-size:clamp(9px,.70vw,12px);letter-spacing:-.045em;padding:0 3px}
+.card-copy{min-width:0;flex:1;align-self:stretch;display:flex;align-items:center;justify-content:center;position:relative;z-index:1;padding:0 clamp(9px,.9vw,16px)}
+ .card-desc{color:var(--muted);font-size:clamp(11px,.97vw,15px);line-height:1.22;min-width:0;width:100%;text-align:center;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow-wrap:anywhere;text-shadow:0 1px 0 rgba(0,0,0,.14)}
+.disabled{border-style:dashed;opacity:.56;cursor:default}
+.disabled .card-desc{color:#f4f7ff}
+.disabled .glyph{background:linear-gradient(135deg,var(--badge-a),var(--badge-b));filter:brightness(.84) saturate(.8)}
+/* Positional reconstruction of the user's paint composition, WITHOUT the white Paint masks. */
+.app-card[data-name="QPJB13"]{--left:6.30%;--top:2.00%;}
+.app-card[data-name="RR"]{--left:6.30%;--top:13.00%;}
+.app-card[data-name="Calas"]{--left:6.30%;--top:24.00%;}
+.app-card[data-name="QPJB"]{--left:37.26%;--top:7.50%;}
+.app-card[data-name="CalasOrga"]{--left:37.26%;--top:29.50%;}
+.app-card[data-name="KOTP"]{--left:68.22%;--top:2.00%;}
+.app-card[data-name="Dico"]{--left:77.25%;--top:24.00%;}
+.app-card[data-name="bridgecomposer"]{--left:3.91%;--top:46.35%;}
+.app-card[data-name="PBNDownloader"]{--left:3.91%;--top:57.35%;}
+.app-card[data-name="Bridge DD"]{--left:3.91%;--top:68.35%;}
+.app-card[data-name="Eval K&R"]{--left:3.91%;--top:79.35%;}
+.app-card[data-name="play"]{--left:32.69%;--top:62.85%;}
+.app-card[data-name="gen"]{--left:32.69%;--top:84.85%;}
+.app-card[data-name="MVT"]{--left:63.65%;--top:46.35%;}
+.app-card[data-name="Timer"]{--left:63.65%;--top:57.35%;}
+.app-card[data-name="REF"]{--left:63.65%;--top:68.35%;}
+.app-card[data-name="NOISE"]{--left:63.65%;--top:79.35%;}
+.app-card[data-name="Ancar83"]{--left:63.65%;--top:90.35%;}
+
+/* V13.3 — Deux duos symétriques : même écart horizontal (12.12%)
+   entre QPJB13/RR/Calas et QPJB/CalasOrga, et entre play/gen et MVT/Timer/REF/NOISE/ancessy.
+   L’écart est la moyenne des écarts de centrage idéaux dans les deux couloirs (13.21 et 11.03%).
+   Les deux duos ne s’écartent chacun que de 1.09% du centre de leur couloir. */
+/* V12.3 — Reference: QPJB13, RR, Calas at 3.30%, 14.30%, 25.30% (11% apart).
+   QPJB at 8.80% is halfway between QPJB13 and RR.
+   CalasOrga at 30.80% is halfway between Calas and an imaginary fourth row at 36.30%.
+   Distances QPJB/CalasOrga, play/gen and KOTP/Dico = exactly 22% each.
+   All positions are top edges with identical card heights, so center distances are identical too. */
+/* V12.8 : on retrouve les marges visuelles de la V12.3 sans réintroduire de pied de page.
+   1.5dvh réservés en bas compensent le pied de page supprimé. */
+@media(min-width:1100px){.page{padding-bottom:1.5dvh}}
+/* On small screens, switch to a compact 2-column mosaic that keeps all 18 apps visible. */
+@media(max-width:1099px){
+  .page{padding:7px 10px 6px}
+  .mosaic{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(9,minmax(0,1fr));column-gap:11px;row-gap:8px}
+  .app-card{position:relative;left:auto;top:auto;width:100%;height:calc(100% - 5px);--float-x:2.7px;--float-y:2.4px;--badge-width:clamp(70px,7vw,85px)}
+  .glyph{font-size:clamp(11px,1.55vw,16px);min-width:56px}
+  .long-name .glyph{font-size:clamp(8px,1.16vw,11px);padding:0 4px}
+  .medium-name .glyph{font-size:clamp(10px,1.35vw,13px);padding:0 6px}
+  .two-line-name .glyph{font-size:clamp(9px,1.28vw,12px);padding:0 4px}
+  .card-copy{padding:0 8px}
+   .card-desc{font-size:clamp(11px,1.55vw,14px)}
+}
+@media(max-width:550px){
+  .page{padding:7px 7px 5px}
+  .mosaic{column-gap:8px;row-gap:7px}
+  .app-card{height:calc(100% - 4px);border-radius:11px;--float-x:2px;--float-y:1.9px;--badge-width:67px}
+  .glyph{min-width:49px;font-size:clamp(12px,2.95vw,14px);padding:0 6px}
+  .long-name .glyph{font-size:clamp(7.5px,1.85vw,9.5px);padding:0 4px}
+  .medium-name .glyph{font-size:clamp(10px,2.4vw,11px);padding:0 5px}
+  .two-line-name .glyph{font-size:10px;padding:0 3px}
+  .app-card[data-name="Bridge DD"] .glyph{font-size:11px;padding:0 3px}
+  .card-copy{padding:0 6px}
+   .card-desc{font-size:clamp(11px,2.75vw,12.5px)}
+  .footer{height:15px;font-size:9px;padding:0 4px}
+}
+@media(max-height:640px){.mosaic{row-gap:5px}}
+@media(prefers-reduced-motion:reduce){.app-card{animation:none!important;transform:none!important}*{transition:none!important}}
+/* V13.9 — Un descriptif plus détaillé pour Bridge Composer, sans agrandir la carte. */
+.app-card[data-name="bridgecomposer"] .card-desc{font-size:clamp(10px,.83vw,13px);line-height:1.13;-webkit-line-clamp:4}
+@media(max-width:550px){.app-card[data-name="bridgecomposer"] .card-desc{font-size:9.5px;line-height:1.12;-webkit-line-clamp:6}}
+/* V14.3 — Typographie augmentée sur ordinateur et sur mobile; géométrie des cartes inchangée. */
+/* V13.6 — Flottement doux réactivé. */
+/* V13.8 — Badges colorés : largeur identique pour les 18 applications. */
+/* V14.8 : PBN Downloader, Bridge DD, play, gen en rose framboise identique (#D875AD). Toutes les autres couleurs et positions inchangees. */
+/* V14.10 : ajustement minimal +5% de luminosite percue et +6% saturation sur les badges, sans halo ni ombre ajoutee. */
+
+/* V14.21 — Mobile : de vraies cartes lisibles, déroulement naturel.
+   Les règles desktop >=1100px restent inchangées. */
+@media (max-width:1099px) {
+  html,body{height:auto;min-height:100%;overflow-x:hidden;overflow-y:auto}
+  .page{height:auto;min-height:100dvh;padding:18px max(12px,env(safe-area-inset-right)) calc(24px + env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left))}
+  .mosaic{
+    width:100%;max-width:900px;margin:0 auto;
+    display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+    grid-template-rows:none;grid-auto-rows:minmax(76px,auto);
+    column-gap:14px;row-gap:13px;
+    align-items:stretch;min-height:0;flex:none;
   }
-
-  *{box-sizing:border-box}
-  html{min-height:100%;background:var(--bg)}
-  body{
-    margin:0;
-    min-height:100vh;
-    color:var(--ink);
-    font-family:'Inter',ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
-    background:
-      radial-gradient(900px 620px at -8% -10%, rgba(93,111,242,.22), transparent 62%),
-      radial-gradient(780px 620px at 105% 96%, rgba(45,212,191,.16), transparent 60%),
-      radial-gradient(620px 520px at 86% 42%, rgba(255,138,101,.09), transparent 64%),
-      var(--bg);
-    padding:clamp(34px,6vw,72px) 20px 44px;
-    line-height:1.5;
-    overflow-x:hidden;
+  .app-card{
+    position:relative;left:auto;top:auto;width:100%;height:auto;min-height:76px;
+    border-radius:16px;--badge-width:88px;
+    --float-x:1.1px;--float-y:1.0px;
   }
-
-  body::before{
-    content:"";
-    position:fixed;
-    inset:0;
-    pointer-events:none;
-    opacity:.22;
-    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.05'/%3E%3C/svg%3E");
-    mix-blend-mode:soft-light;
+  .card-top{height:auto;align-self:stretch;flex:0 0 var(--badge-width)}
+  .glyph{height:auto;align-self:stretch;border-radius:0 15px 15px 0;font-size:15px}
+  .two-line-name .glyph{font-size:13px}
+  .medium-name .glyph{font-size:13px}
+  .app-card[data-name="PBNDownloader"] .glyph{font-size:12px}
+  .app-card[data-name="Bridge DD"] .glyph{font-size:13px}
+  .card-copy{padding:9px 12px}
+  .card-desc{font-size:13px;line-height:1.25;display:block;overflow:visible;-webkit-line-clamp:unset;overflow-wrap:normal}
+  .app-card[data-name="bridgecomposer"] .card-desc{font-size:12px;line-height:1.25;-webkit-line-clamp:unset}
+  .disabled{opacity:.56}
+}
+@media (max-width:640px) {
+  .page{padding:16px max(14px,env(safe-area-inset-right)) calc(26px + env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left))}
+  .mosaic{display:flex;flex-direction:column;gap:11px;max-width:500px}
+  .app-card{
+    width:100%;height:auto;min-height:71px;
+    border-radius:16px;--badge-width:94px;
+    --float-x:.8px;--float-y:.7px;
   }
-
-  .wrap{
-    width:min(100%,680px);
-    margin:0 auto;
-    position:relative;
-    z-index:1;
-  }
-
-  .section-label{
-    margin:0 0 14px 4px;
-    color:var(--muted);
-    font-size:12.5px;
-    font-weight:600;
-    letter-spacing:.08em;
-    text-transform:uppercase;
-    animation:rise .55s cubic-bezier(.2,.8,.2,1) both;
-  }
-
-  .list{
-    display:grid;
-    gap:12px;
-  }
-
-  .project{
-    --accent:var(--primary);
-    display:grid;
-    grid-template-columns:auto minmax(0,1fr) auto;
-    align-items:center;
-    gap:15px;
-    min-height:82px;
-    padding:14px 15px;
-    color:inherit;
-    text-decoration:none;
-    border:1px solid var(--line);
-    border-radius:var(--radius);
-    background:linear-gradient(145deg,rgba(255,255,255,.07),rgba(255,255,255,.035));
-    box-shadow:
-      inset 0 1px 0 rgba(255,255,255,.055),
-      0 18px 44px -32px rgba(0,0,0,.95);
-    backdrop-filter:blur(18px) saturate(120%);
-    -webkit-backdrop-filter:blur(18px) saturate(120%);
-    position:relative;
-    overflow:hidden;
-    isolation:isolate;
-    opacity:0;
-    transform:translateY(9px);
-    animation:rise .48s cubic-bezier(.2,.8,.2,1) forwards;
-    transition:transform .2s cubic-bezier(.2,.8,.2,1),border-color .2s ease,background .2s ease,box-shadow .2s ease;
-  }
-
-  .project::before{
-    content:"";
-    position:absolute;
-    inset:0 auto 0 0;
-    width:3px;
-    background:linear-gradient(to bottom,transparent,var(--accent),transparent);
-    opacity:.78;
-  }
-
-  .project::after{
-    content:"";
-    position:absolute;
-    width:160px;height:160px;border-radius:50%;
-    right:-95px;top:-90px;
-    background:var(--accent);
-    filter:blur(44px);
-    opacity:.09;
-    z-index:-1;
-    transition:opacity .2s ease,transform .2s ease;
-  }
-
-  @media (hover:hover) and (pointer:fine){
-    .project:hover{
-      transform:translateY(-3px);
-      border-color:var(--line-hover);
-      background:linear-gradient(145deg,rgba(255,255,255,.095),rgba(255,255,255,.052));
-      box-shadow:
-        inset 0 1px 0 rgba(255,255,255,.08),
-        0 24px 54px -34px var(--accent);
-    }
-
-    .project:hover::after{opacity:.17;transform:scale(1.08)}
-    .project:hover .launch{
-      color:#0a0b14;
-      background:var(--accent);
-      border-color:transparent;
-      transform:scale(1.04);
-    }
-    .project:hover .launch svg{transform:translate(1px,-1px)}
-  }
-
-  .project:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
-
-  .badge{
-    min-width:64px;
-    height:48px;
-    padding:0 14px;
-    border-radius:14px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-family:'Space Grotesk',sans-serif;
-    font-size:13.5px;
-    line-height:1;
-    letter-spacing:.01em;
-    font-weight:700;
-    color:#0a0b14;
-    background:linear-gradient(135deg,var(--badge-a),var(--badge-b));
-    box-shadow:
-      inset 0 1px 0 rgba(255,255,255,.28),
-      0 10px 24px -15px var(--accent);
-  }
-
-  .copy{min-width:0}
-
-  .desc{
-    margin:0;
-    min-height:19px;
-    color:var(--muted);
-    font-size:13.5px;
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
-  }
-
-  .desc.loading{
-    width:min(78%,360px);
-    height:10px;
-    min-height:10px;
-    border-radius:999px;
-    background:linear-gradient(90deg,rgba(255,255,255,.055) 25%,rgba(255,255,255,.14) 38%,rgba(255,255,255,.055) 63%);
-    background-size:360% 100%;
-    animation:shimmer 1.35s ease infinite;
-  }
-
-  .launch{
-    width:40px;height:40px;
-    display:grid;
-    place-items:center;
-    border-radius:13px;
-    color:#c2c7da;
-    background:rgba(255,255,255,.045);
-    border:1px solid rgba(255,255,255,.055);
-    transition:transform .2s ease,color .2s ease,background .2s ease,border-color .2s ease;
-  }
-
-  .launch svg{transition:transform .2s ease}
-
-  @keyframes rise{to{opacity:1;transform:translateY(0)}}
-  @keyframes shimmer{0%{background-position:100% 0}100%{background-position:0 0}}
-
-  @media (max-width:520px){
-    body{padding-left:14px;padding-right:14px}
-    .project{min-height:76px;padding:12px;gap:12px;border-radius:17px}
-    .badge{min-width:58px;height:44px;padding:0 11px;border-radius:12px;font-size:12.5px}
-    .launch{width:36px;height:36px;border-radius:11px}
-    .desc{font-size:12.5px}
-  }
-
-  @media (prefers-reduced-motion:reduce){
-    *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition:none!important;scroll-behavior:auto!important}
-  }
-</style>
-</head>
-<body>
-  <main class="wrap">
-    <p class="section-label">Projets en ligne</p>
-
-    <section class="list" aria-label="Liste des projets">
-      <a class="project" data-repo="RR" data-description="Website du Roy René" href="https://capgui13.github.io/RR/" target="_blank" rel="noopener" style="--accent:#8390f7;--badge-a:#99a4ff;--badge-b:#5c6fe5;animation-delay:.08s" aria-label="Ouvrir le projet RR dans un nouvel onglet">
-        <span class="badge">RR</span>
-        <span class="copy"><span class="desc">Website du Roy René</span></span>
-        <span class="launch" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg></span>
-      </a>
-
-      <a class="project" data-repo="QPJB13" data-description="Website du QPJB" href="https://capgui13.github.io/QPJB13/" target="_blank" rel="noopener" style="--accent:#2fc7b4;--badge-a:#67e2d3;--badge-b:#24ae9d;animation-delay:.14s" aria-label="Ouvrir le projet QPJB13 dans un nouvel onglet">
-        <span class="badge">QPJB13</span>
-        <span class="copy"><span class="desc">Website du QPJB</span></span>
-        <span class="launch" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg></span>
-      </a>
-
-      <a class="project" data-repo="QPJB" data-description="App du QPJB" href="https://capgui13.github.io/QPJB/" target="_blank" rel="noopener" style="--accent:#1fa895;--badge-a:#4fd0be;--badge-b:#198a7b;animation-delay:.20s" aria-label="Ouvrir le projet QPJB dans un nouvel onglet">
-        <span class="badge">QPJB</span>
-        <span class="copy"><span class="desc">App du QPJB</span></span>
-        <span class="launch" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg></span>
-      </a>
-
-      <a class="project" data-repo="PBN" data-description="PBN Downloader (FFB)" href="https://capgui13.github.io/PBNdownloaderFFB/" target="_blank" rel="noopener" style="--accent:#b27ae8;--badge-a:#d3a7f5;--badge-b:#9a5fd6;animation-delay:.26s" aria-label="Ouvrir le projet PBN dans un nouvel onglet">
-        <span class="badge">PBN</span>
-        <span class="copy"><span class="desc">PBN Downloader (FFB)</span></span>
-        <span class="launch" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg></span>
-      </a>
-
-      <a class="project" data-repo="gen" href="https://capgui13.github.io/gen/" target="_blank" rel="noopener" style="--accent:#8f63dc;--badge-a:#b899ee;--badge-b:#7445c4;animation-delay:.32s" aria-label="Ouvrir le projet gen dans un nouvel onglet">
-        <span class="badge">gen</span>
-        <span class="copy"><span class="desc loading" aria-live="polite"></span></span>
-        <span class="launch" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg></span>
-      </a>
-
-      <a class="project" data-repo="play" data-description="Rings" href="https://capgui13.github.io/play/" target="_blank" rel="noopener" style="--accent:#6f49c6;--badge-a:#9b7ae4;--badge-b:#5a35af;animation-delay:.38s" aria-label="Ouvrir le projet play dans un nouvel onglet">
-        <span class="badge">play</span>
-        <span class="copy"><span class="desc">Rings</span></span>
-        <span class="launch" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg></span>
-      </a>
-
-      <a class="project" data-repo="Eval" data-description="Evaluator" href="https://capgui13.github.io/Eval/" target="_blank" rel="noopener" style="--accent:#ff936f;--badge-a:#ffb296;--badge-b:#e97855;animation-delay:.44s" aria-label="Ouvrir Evaluator dans un nouvel onglet">
-        <span class="badge">Eval</span>
-        <span class="copy"><span class="desc">Evaluator</span></span>
-        <span class="launch" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg></span>
-      </a>
-
-      <a class="project" data-repo="BridgeTimer" data-description="Timer" href="https://capgui13.github.io/BridgeTimer/" target="_blank" rel="noopener" style="--accent:#38bdf8;--badge-a:#7dd3fc;--badge-b:#0ea5e9;animation-delay:.50s" aria-label="Ouvrir Timer dans un nouvel onglet">
-        <span class="badge">Timer</span>
-        <span class="copy"><span class="desc">Timer</span></span>
-        <span class="launch" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg></span>
-      </a>
-    </section>
-  </main>
-
-<script>
-(() => {
-  const card = document.querySelector('.project[data-repo="gen"]');
-  if (!card) return;
-
-  const desc = card.querySelector('.desc');
-  const CACHE_KEY = 'capgui13-gen-description-v3';
-  const CACHE_TTL = 6 * 60 * 60 * 1000;
-
-  const show = text => {
-    desc.classList.remove('loading');
-    desc.textContent = text || '';
-  };
-
-  let cached = null;
-  try { cached = JSON.parse(localStorage.getItem(CACHE_KEY) || 'null'); } catch (_) {}
-
-  if (cached && Date.now() - cached.time < CACHE_TTL) {
-    show(cached.description);
-    return;
-  }
-
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), 3500);
-
-  fetch('https://api.github.com/repos/capgui13/gen', {
-    headers: { 'Accept': 'application/vnd.github+json' },
-    signal: controller.signal
-  })
-    .then(res => {
-      if (!res.ok) throw new Error(`GitHub API: ${res.status}`);
-      return res.json();
-    })
-    .then(data => {
-      const description = (data.description || '').trim();
-      try { localStorage.setItem(CACHE_KEY, JSON.stringify({ description, time: Date.now() })); } catch (_) {}
-      show(description);
-    })
-    .catch(() => show(cached ? cached.description : ''))
-    .finally(() => clearTimeout(timer));
-})();
-</script>
-</body>
-</html>
+  .glyph{border-radius:0 15px 15px 0;font-size:15px;min-width:0;padding:0 6px}
+  .medium-name .glyph{font-size:13px}
+  .two-line-name .glyph{font-size:13px;line-height:1.12}
+  .app-card[data-name="PBNDownloader"] .glyph{font-size:12px}
+  .app-card[data-name="Bridge DD"] .glyph{font-size:13px}
+  .card-copy{padding:11px 15px}
+  .card-desc{font-size:14px;line-height:1.28;display:block;overflow:visible;-webkit-line-clamp:unset}
+  .app-card[data-name="bridgecomposer"] .card-desc{font-size:13px;line-height:1.25;-webkit-line-clamp:unset}
+  .app-card[data-name="QPJB"],
+  .app-card[data-name="KOTP"],
+  .app-card[data-name="bridgecomposer"],
+  .app-card[data-name="play"],
+  .app-card[data-name="MVT"]{margin-top:13px}
+  .app-card:hover:not(.disabled){box-shadow:inset 0 1px rgba(255,255,255,.045),0 4px 10px rgba(0,0,0,.12)}
+  .app-card:active:not(.disabled){border-color:color-mix(in srgb,var(--accent) 50%,transparent);background:linear-gradient(148deg,rgba(255,255,255,.12),rgba(255,255,255,.035))}
+}
+</style></head><body>
+<div class="page"><main class="mosaic" aria-label="Applications de CapGui13">
+<a aria-label="Ouvrir QPJB13" class="app-card" data-name="QPJB13" href="https://capgui13.github.io/QPJB13/" rel="noopener noreferrer" style="--accent:#AD8BE5;--badge-a:#D1B7F8;--badge-b:#956CCC;--col:1;--span:3;--row:1;--delay:-0.00s" target="_blank"><span class="card-top"><span aria-hidden="true" class="glyph">QPJB13</span></span><span class="card-copy"><span class="card-desc">Website du QPJB</span></span></a>
+<a aria-label="Ouvrir RR" class="app-card" data-name="RR" href="https://capgui13.github.io/RR/" rel="noopener noreferrer" style="--accent:#7398E5;--badge-a:#8EB1F8;--badge-b:#4A6FCF;--col:1;--span:3;--row:2;--delay:-0.67s" target="_blank"><span class="card-top"><span aria-hidden="true" class="glyph">RR</span></span><span class="card-copy"><span class="card-desc">Website du Roy René</span></span></a>
+<div aria-label="Calas, lien à confirmer" class="app-card disabled" data-name="Calas" style="--accent:#D8B64E;--badge-a:#F6DE8B;--badge-b:#BD9638;--col:1;--span:3;--row:3;--delay:-1.34s" title="Lien de Calas à confirmer"><span class="card-top"><span aria-hidden="true" class="glyph">Calas</span></span><span class="card-copy"><span class="card-desc">Website du club</span></span></div>
+<a aria-label="Ouvrir QPJB" class="app-card" data-name="QPJB" href="https://capgui13.github.io/QPJB/" rel="noopener noreferrer" style="--accent:#AD8BE5;--badge-a:#D1B7F8;--badge-b:#956CCC;--col:5;--span:3;--row:1;--delay:-2.01s" target="_blank"><span class="card-top"><span aria-hidden="true" class="glyph">QPJB</span></span><span class="card-copy"><span class="card-desc">L'app du Quai</span></span></a>
+<a aria-label="Ouvrir CalasOrga" class="app-card medium-name" data-name="CalasOrga" href="https://calasorga.vercel.app" rel="noopener noreferrer" style="--accent:#D8B64E;--badge-a:#F6DE8B;--badge-b:#BD9638;--col:5;--span:3;--row:3;--delay:-2.68s" target="_blank"><span class="card-top"><span aria-hidden="true" class="glyph">CalasOrga</span></span><span class="card-copy"><span class="card-desc">Planning du club</span></span></a>
+<a aria-label="Ouvrir KOTP" class="app-card" data-name="KOTP" href="https://capgui13.github.io/KOTP/" rel="noopener noreferrer" style="--accent:#A45ABA;--badge-a:#CF8DDE;--badge-b:#88419F;--col:11;--span:3;--row:1;--delay:-3.35s" target="_blank"><span class="card-top"><span aria-hidden="true" class="glyph">KOTP</span></span><span class="card-copy"><span class="card-desc">King Of The Provence</span></span></a>
+<a aria-label="Ouvrir Dico" class="app-card" data-name="Dico" href="https://capgui13.github.io/Dico/" rel="noopener noreferrer" style="--accent:#56BE78;--badge-a:#8AE8A1;--badge-b:#35A566;--col:12;--span:3;--row:3;--delay:-4.02s" target="_blank"><span class="card-top"><span aria-hidden="true" class="glyph">Dico</span></span><span class="card-copy"><span class="card-desc">Dictionnaire d'enchères</span></span></a>
+<a aria-label="Ouvrir Bridge Composer" class="app-card two-line-name" data-name="bridgecomposer" href="https://bridgecomposer.com/" rel="noopener noreferrer" target="_blank" style="--accent:#F25561;--badge-a:#FF8880;--badge-b:#E94355;--col:1;--span:3;--row:5;--delay:-4.69s"><span class="card-top"><span aria-hidden="true" class="glyph">Bridge<br>Composer</span></span><span class="card-copy"><span class="card-desc">Shareware pour créer/modifier des donnes, Double Dummy, ...</span></span></a>
+<a aria-label="Ouvrir PBN Downloader" class="app-card two-line-name" data-name="PBNDownloader" href="https://capgui13.github.io/PBNdownloaderFFB/" rel="noopener noreferrer" style="--accent:#DF79B2;--badge-a:#F3A3D0;--badge-b:#C357A0;--col:1;--span:3;--row:6;--delay:-5.36s" target="_blank"><span class="card-top"><span aria-hidden="true" class="glyph">PBN<br>Downloader</span></span><span class="card-copy"><span class="card-desc">Convertir des donnes du site FFB en PBN</span></span></a>
+<a aria-label="Ouvrir Bridge DD" class="app-card" data-name="Bridge DD" href="https://capgui13.github.io/BridgeDD/" rel="noopener noreferrer" style="--accent:#DF79B2;--badge-a:#F3A3D0;--badge-b:#C357A0;--col:1;--span:3;--row:7;--delay:-6.03s" target="_blank"><span class="card-top"><span aria-hidden="true" class="glyph">Bridge DD</span></span><span class="card-copy"><span class="card-desc">Double Dummy</span></span></a>
+<a aria-label="Ouvrir Eval K&amp;R" class="app-card medium-name" data-name="Eval K&amp;R" href="https://capgui13.github.io/Eval/" rel="noopener noreferrer" style="--accent:#E6A45D;--badge-a:#F8C78B;--badge-b:#CB8544;--col:1;--span:3;--row:8;--delay:-6.70s" target="_blank"><span class="card-top"><span aria-hidden="true" class="glyph">Eval K&amp;R</span></span><span class="card-copy"><span class="card-desc">Évaluation des mains</span></span></a>
+<a aria-label="Ouvrir play" class="app-card" data-name="play" href="https://capgui13.github.io/play/" rel="noopener noreferrer" style="--accent:#DF79B2;--badge-a:#F3A3D0;--badge-b:#C357A0;--col:6;--span:3;--row:6;--delay:-7.37s" target="_blank"><span class="card-top"><span aria-hidden="true" class="glyph">play</span></span><span class="card-copy"><span class="card-desc">Rings</span></span></a>
+<a aria-label="Ouvrir gen" class="app-card" data-name="gen" href="https://capgui13.github.io/gen/" rel="noopener noreferrer" style="--accent:#DF79B2;--badge-a:#F3A3D0;--badge-b:#C357A0;--col:6;--span:3;--row:8;--delay:-0.04s" target="_blank"><span class="card-top"><span aria-hidden="true" class="glyph">gen</span></span><span class="card-copy"><span class="card-desc">Generator</span></span></a>
+<a aria-label="Ouvrir MVT" class="app-card" data-name="MVT" href="https://capgui13.github.io/MVT/" rel="noopener noreferrer" style="--accent:#40BFF0;--badge-a:#79D5FD;--badge-b:#20ADEF;--col:10;--span:3;--row:5;--delay:-0.71s" target="_blank"><span class="card-top"><span aria-hidden="true" class="glyph">MVT</span></span><span class="card-copy"><span class="card-desc">Mouvements</span></span></a>
+<a aria-label="Ouvrir Timer" class="app-card" data-name="Timer" href="https://capgui13.github.io/BridgeTimer/" rel="noopener noreferrer" style="--accent:#EBAB62;--badge-a:#FFD098;--badge-b:#D48D4D;--col:10;--span:3;--row:6;--delay:-1.38s" target="_blank"><span class="card-top"><span aria-hidden="true" class="glyph">Timer</span></span><span class="card-copy"><span class="card-desc">Timer amélioré</span></span></a>
+<a aria-label="Ouvrir REF" class="app-card" data-name="REF" href="https://capgui13.github.io/REF/" rel="noopener noreferrer" style="--accent:#40BFF0;--badge-a:#79D5FD;--badge-b:#20ADEF;--col:10;--span:3;--row:7;--delay:-2.05s" target="_blank"><span class="card-top"><span aria-hidden="true" class="glyph">REF</span></span><span class="card-copy"><span class="card-desc">Arbitrage (fiches)</span></span></a>
+<a aria-label="Ouvrir NOISE" class="app-card" data-name="NOISE" href="https://capgui13.github.io/NOISE/" rel="noopener noreferrer" style="--accent:#DA9A51;--badge-a:#F0BD7A;--badge-b:#C9813D;--col:10;--span:3;--row:8;--delay:-2.72s" target="_blank"><span class="card-top"><span aria-hidden="true" class="glyph">NOISE</span></span><span class="card-copy"><span class="card-desc">Sonomètre</span></span></a>
+<a aria-label="Ouvrir Ancar83" class="app-card" data-name="Ancar83" href="https://bridge.ancar83.fr/" rel="noopener noreferrer" target="_blank" style="--accent:#F25561;--badge-a:#FF8880;--badge-b:#E94355;--col:10;--span:3;--row:9;--delay:-3.39s"><span class="card-top"><span aria-hidden="true" class="glyph">Ancar83</span></span><span class="card-copy"><span class="card-desc">Website d'Arnaud Ancessy (arbitrage)</span></span></a>
+</main></div>
+</body></html>
